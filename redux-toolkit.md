@@ -1,5 +1,13 @@
 # Redux-toolkit
 
+## [ ] RTK Query docs
+
+### Comparison with Other Tools
+
+https://redux-toolkit.js.org/rtk-query/comparison
+
+* [swr](./swr.md)
+
 ## [ ] Исходники rtk query 1.6.0
 
 https://redux-toolkit.js.org/rtk-query/overview

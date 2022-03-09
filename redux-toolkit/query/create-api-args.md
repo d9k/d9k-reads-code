@@ -1,4 +1,4 @@
-# Redux-toolkit: query: createApi
+# Redux-toolkit: query: createApi() args
 
 ```typescript
 > import { schema } from 'ts-transformer-json-schema';
@@ -79,3 +79,7 @@ See doc on args: https://redux-toolkit.js.org/rtk-query/api/createApi
   refetchOnReconnect: { type: 'boolean', optional: true }
 }
 ```
+
+interface `CreateApiOptions` from `src/query/createApi.ts`
+
+

@@ -1,21 +1,8 @@
-# Redux-toolkit: query
+# Redux-toolkit: query: createApi()
 
-## [ ] RTK Query 1.6.0 docs
+## rtk query 1.6.0 docs
 
-### Comparison with Other Tools
-
-https://redux-toolkit.js.org/rtk-query/comparison
-
-* [swr](/swr.md)
-
-[] Best features
-  - https://redux-toolkit.js.org/rtk-query/comparison#unique-capabilities
-
-```
-You can easily invalidate entities or patch existing query data (via util.updateQueryData) from middleware.
-```
-
-## [ ] Исходники rtk query 1.6.0
+## rtk query 1.6.0 sources
 
 https://redux-toolkit.js.org/rtk-query/overview
 
@@ -56,6 +43,8 @@ const createApi = /* @__PURE__ */ buildCreateApi(
 - query slice:
   - actions: `queryResultPatched()`, `removeQueryResult()`
   - calls: `applyPatches()`, `copyWithStructuralSharing()`, `updateQuerySubstateIfExists()`,
+  - listens `queryThunk`: `.pending`, `.fulfilled`, `.rejected`
+
 
 - mutation slice:
   - actions: `unsubscribeMutationResult()`:
@@ -64,20 +53,23 @@ const createApi = /* @__PURE__ */ buildCreateApi(
 - invalidation slice:
   - calls:
     - `calculateProvidedByThunk()`
-    - `isAnyOf(isFulfilled(queryThunk), isRejectedWithValue(queryThunk))`
-  - listens other slices actions:
-    - query slice: `removeQueryResult()`
+  - listens
+    - `queryThunk`:
+      - `isAnyOf(isFulfilled(queryThunk), isRejectedWithValue(queryThunk))`
+    - other slices actions:
+      - query slice: `removeQueryResult()`
 
 - subscription slice:
   - actions: `unsubscribeQueryResult()`, `updateSubscriptionOptions()`
   - listens slices actions calls:
     - query slice: `removeQueryResult()`
+    - `queryThunk`: `.pending`, `.rejected`
 
 - config slice:
   - actions: `middlewareRegistered()`
-  - state: `online`, `focused`
-
-
+  - state: `online`, `focused`, `middlewareRegistered`
+  - listens: `onOnline`, `onOffline`, `onFocus`, `onFocusLost`
+    - см. `src/query/core/setupListeners.ts`
 
 ```typescript
 > import { keys } from 'ts-transformer-keys'
@@ -214,7 +206,7 @@ export type EndpointDefinition<
   | MutationDefinition<QueryArg, BaseQuery, TagTypes, ResultType, ReducerPath>
 ```
 
-### Additional processing
+### Additional query result processing
 
 ```typescript
 extraReducers: (builder) => {
@@ -227,3 +219,9 @@ extraReducers: (builder) => {
       );
   },
 ```
+
+## Endpoints definitions
+
+`EndpointDefinitionWithQuery`
+
+

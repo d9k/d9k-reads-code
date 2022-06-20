@@ -1,5 +1,33 @@
 # Redux-toolkit: query: createApi() args
 
+## docs (rtk query 1.6.0)
+
+https://redux-toolkit.js.org/rtk-query/api/createApi
+
+- `baseQuery`
+- `endpoints`
+- `extractRehydrationInfo`
+- `keepUnusedDataFor`
+- `reducerPath`
+- `refetchOnMountOrArgChange`
+- `refetchOnFocus`
+- `refetchOnReconnect`
+- `serializeQueryArgs`
+- `tagTypes`
+
+### baseQuery
+
+`(args, api: {signal, dispatch, getState, extra}, extraOptions)`
+
+### serializeQueryArgs​
+
+creates a cache key based on the combination of arguments + endpoint name (ignoring object key order)
+
+
+
+
+## Runtime reflection (rtk query 1.6.0)
+
 ```typescript
 > import { schema } from 'ts-transformer-json-schema';
 > import {buildCreateApi} from 'src/query/react/index.ts'
@@ -81,5 +109,3 @@ See doc on args: https://redux-toolkit.js.org/rtk-query/api/createApi
 ```
 
 interface `CreateApiOptions` from `src/query/createApi.ts`
-
-

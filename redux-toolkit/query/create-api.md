@@ -1,8 +1,8 @@
 # Redux-toolkit: query: createApi()
 
-## rtk query 1.6.0 docs
+## docs (rtk query 1.6.0)
 
-## rtk query 1.6.0 sources
+## sources (rtk query 1.6.0)
 
 https://redux-toolkit.js.org/rtk-query/overview
 

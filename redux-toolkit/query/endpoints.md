@@ -30,9 +30,18 @@ const api = createApi({
       },
 ```
 
-arguments for `build.query<>`: `query`,
+* arguments for `build.query<>`:
+  - `query` | `queryFn`
+  - `extraOptions`
+  - `keepUnusedDataFor`
+  - `onCacheEntryAdded`
+  - `onQueryStarted`
+  - `providesTags` (`query`) | `invalidatesTags` (`mutation`)
+  - `transformResponse`
 
 https://redux-toolkit.js.org/rtk-query/api/createApi#query-endpoint-definition
+
+https://redux-toolkit.js.org/rtk-query/api/createApi#anatomy-of-an-endpoint
 
 `extraOptions?: BaseQueryExtraOptions<BaseQuery>`
 

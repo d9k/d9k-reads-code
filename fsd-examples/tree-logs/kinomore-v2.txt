@@ -1,0 +1,551 @@
+kinomore-v2/src
+├── app
+│   ├── providers
+│   │   ├── index.ts
+│   │   └── with-seo.tsx
+│   ├── styles
+│   │   ├── _fonts.scss
+│   │   ├── _globals.scss
+│   │   ├── index.scss
+│   │   └── _vars.scss
+│   └── index.tsx
+├── entities
+│   ├── movie
+│   │   └── item
+│   │       ├── index.ts
+│   │       ├── styles.module.scss
+│   │       └── ui.tsx
+│   ├── search-window
+│   │   ├── model
+│   │   │   └── index.ts
+│   │   ├── ui
+│   │   │   ├── search-input
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── styles.module.scss
+│   │   │   │   └── ui.tsx
+│   │   │   ├── search-list
+│   │   │   │   ├── ui
+│   │   │   │   │   ├── search-item
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.scss
+│   │   │   │   └── index.ts
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.scss
+│   │   └── index.ts
+│   └── session
+│       ├── index.ts
+│       └── model.ts
+├── features
+│   ├── favorites
+│   │   ├── index.ts
+│   │   └── model.ts
+│   └── filters
+│       ├── config
+│       │   └── index.ts
+│       ├── lib
+│       │   ├── get-option
+│       │   │   └── index.ts
+│       │   └── index.ts
+│       ├── model
+│       │   └── index.ts
+│       ├── ui
+│       │   ├── drawer-select
+│       │   │   ├── index.ts
+│       │   │   ├── styles.module.scss
+│       │   │   └── ui.tsx
+│       │   ├── select
+│       │   │   ├── index.ts
+│       │   │   ├── styles.module.scss
+│       │   │   └── ui.tsx
+│       │   ├── index.tsx
+│       │   └── styles.module.scss
+│       ├── index.ts
+│       └── types.ts
+├── pages
+│   ├── cartoons
+│   │   ├── index.ts
+│   │   └── ui.tsx
+│   ├── favorites
+│   │   ├── index.ts
+│   │   ├── styles.module.scss
+│   │   └── ui.tsx
+│   ├── films
+│   │   ├── index.ts
+│   │   └── ui.tsx
+│   ├── home
+│   │   ├── model
+│   │   │   └── index.ts
+│   │   ├── ui
+│   │   │   ├── comedy-films
+│   │   │   │   ├── index.ts
+│   │   │   │   └── ui.tsx
+│   │   │   ├── drama
+│   │   │   │   ├── index.ts
+│   │   │   │   └── ui.tsx
+│   │   │   ├── fantastic
+│   │   │   │   ├── index.ts
+│   │   │   │   └── ui.tsx
+│   │   │   ├── for-family
+│   │   │   │   ├── index.ts
+│   │   │   │   └── ui.tsx
+│   │   │   ├── genres
+│   │   │   │   ├── config.tsx
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── styles.module.scss
+│   │   │   │   └── ui.tsx
+│   │   │   ├── hero
+│   │   │   │   ├── config
+│   │   │   │   │   ├── hero-movies.ts
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── ui
+│   │   │   │   │   ├── slide
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   ├── types.ts
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.scss
+│   │   │   │   └── index.ts
+│   │   │   ├── info
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── styles.module.scss
+│   │   │   │   └── ui.tsx
+│   │   │   ├── new-films
+│   │   │   │   ├── index.ts
+│   │   │   │   └── ui.tsx
+│   │   │   └── index.tsx
+│   │   └── index.ts
+│   ├── movie
+│   │   ├── lib
+│   │   │   ├── get-page-title
+│   │   │   │   └── index.ts
+│   │   │   └── index.ts
+│   │   ├── model
+│   │   │   └── index.ts
+│   │   ├── ui
+│   │   │   ├── main-section
+│   │   │   │   ├── ui
+│   │   │   │   │   ├── description
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── info
+│   │   │   │   │   │   ├── lib
+│   │   │   │   │   │   │   ├── get-age-rating
+│   │   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   │   ├── get-country
+│   │   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   │   ├── get-genre
+│   │   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── main-buttons
+│   │   │   │   │   │   ├── lib
+│   │   │   │   │   │   │   ├── get-movie-type
+│   │   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── main-persons
+│   │   │   │   │   │   ├── lib
+│   │   │   │   │   │   │   ├── get-actors
+│   │   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   │   ├── get-director
+│   │   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── mobile-actions
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── player
+│   │   │   │   │   │   ├── lib
+│   │   │   │   │   │   │   ├── use-window-size
+│   │   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── share-modal
+│   │   │   │   │   │   ├── lib
+│   │   │   │   │   │   │   ├── use-copy-to-clipboard
+│   │   │   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   │   │   ├── use-copy-to-clipboard.test.ts
+│   │   │   │   │   │   │   │   └── use-copy-to-clipboard.ts
+│   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   ├── ui
+│   │   │   │   │   │   │   ├── index.tsx
+│   │   │   │   │   │   │   └── styles.module.scss
+│   │   │   │   │   │   ├── config.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── title
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── trailer-modal
+│   │   │   │   │   │   ├── lib
+│   │   │   │   │   │   │   ├── get-trailer
+│   │   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.scss
+│   │   │   │   └── index.ts
+│   │   │   ├── persons
+│   │   │   │   ├── ui
+│   │   │   │   │   ├── person-item
+│   │   │   │   │   │   ├── lib
+│   │   │   │   │   │   │   ├── get-profession
+│   │   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.scss
+│   │   │   │   └── index.ts
+│   │   │   ├── similar-movies
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── styles.module.scss
+│   │   │   │   └── ui.tsx
+│   │   │   ├── tabs
+│   │   │   │   ├── ui
+│   │   │   │   │   ├── description
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── images
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── styles.module.scss
+│   │   │   │   │   │   └── ui.tsx
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.scss
+│   │   │   │   └── index.ts
+│   │   │   └── index.tsx
+│   │   └── index.ts
+│   ├── person
+│   │   ├── model
+│   │   │   └── index.ts
+│   │   ├── ui
+│   │   │   ├── filmography
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── styles.module.scss
+│   │   │   │   └── ui.tsx
+│   │   │   ├── main-section
+│   │   │   │   ├── lib
+│   │   │   │   │   ├── get-professions
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── timestamp-to-date
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── ui
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.scss
+│   │   │   │   └── index.ts
+│   │   │   └── index.tsx
+│   │   └── index.ts
+│   ├── profile
+│   │   ├── config
+│   │   │   ├── breadcrumbs.ts
+│   │   │   ├── index.ts
+│   │   │   └── profile-items.ts
+│   │   ├── ui
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.scss
+│   │   └── index.ts
+│   ├── series
+│   │   ├── index.ts
+│   │   └── ui.tsx
+│   └── shared
+│       ├── bindings.ts
+│       └── index.ts
+├── processes
+│   └── root.ts
+├── shared
+│   ├── api
+│   │   ├── common
+│   │   │   ├── api.ts
+│   │   │   ├── config.ts
+│   │   │   ├── index.ts
+│   │   │   └── types.ts
+│   │   ├── internal
+│   │   │   ├── api.ts
+│   │   │   ├── config.ts
+│   │   │   ├── index.ts
+│   │   │   └── types.ts
+│   │   └── index.ts
+│   ├── config
+│   │   ├── genres.ts
+│   │   ├── index.ts
+│   │   ├── init.ts
+│   │   └── sort.ts
+│   ├── factory
+│   │   ├── atom.ts
+│   │   └── index.ts
+│   ├── form
+│   │   ├── adapters
+│   │   │   ├── form.tsx
+│   │   │   ├── index.ts
+│   │   │   └── input.tsx
+│   │   ├── factory.ts
+│   │   ├── field.tsx
+│   │   └── index.ts
+│   ├── lib
+│   │   ├── date
+│   │   │   ├── get-year
+│   │   │   │   └── index.ts
+│   │   │   ├── minutes-to-hour
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── minutes-to-hour.test.ts
+│   │   │   │   └── minutes-to-hour.ts
+│   │   │   └── index.ts
+│   │   ├── filledout
+│   │   │   └── index.ts
+│   │   ├── get-rating
+│   │   │   └── index.ts
+│   │   ├── get-season-string
+│   │   │   ├── get-season-string.test.ts
+│   │   │   ├── get-season-string.ts
+│   │   │   └── index.ts
+│   │   ├── modal
+│   │   │   ├── use-locked-body
+│   │   │   │   └── index.ts
+│   │   │   ├── use-on-click-outside
+│   │   │   │   ├── index.ts
+│   │   │   │   └── use-on-click-outside.ts
+│   │   │   └── index.ts
+│   │   ├── params-to-string
+│   │   │   └── index.ts
+│   │   ├── toggler
+│   │   │   ├── create-toggler.ts
+│   │   │   ├── index.ts
+│   │   │   ├── types.ts
+│   │   │   ├── use-toggler.test.tsx
+│   │   │   └── use-toggler.ts
+│   │   └── index.ts
+│   ├── navigation
+│   │   ├── index.ts
+│   │   └── model.ts
+│   ├── routing
+│   │   ├── index.ts
+│   │   └── paths.ts
+│   └── ui
+│       ├── breadcrumbs
+│       │   ├── index.ts
+│       │   ├── styles.module.scss
+│       │   └── ui.tsx
+│       ├── button
+│       │   ├── index.ts
+│       │   ├── styles.module.scss
+│       │   └── ui.tsx
+│       ├── carousel-multiply
+│       │   ├── lib
+│       │   │   ├── use-dom-ref-with-setter
+│       │   │   │   └── index.ts
+│       │   │   └── index.ts
+│       │   ├── ui
+│       │   │   ├── slider-button
+│       │   │   │   ├── index.ts
+│       │   │   │   ├── styles.module.scss
+│       │   │   │   └── ui.tsx
+│       │   │   ├── index.tsx
+│       │   │   └── styles.module.scss
+│       │   └── index.ts
+│       ├── icon
+│       │   ├── assets
+│       │   │   ├── common
+│       │   │   │   ├── bookmark2.svg
+│       │   │   │   ├── bookmark-slash.svg
+│       │   │   │   ├── bookmark.svg
+│       │   │   │   ├── burger.svg
+│       │   │   │   ├── check.svg
+│       │   │   │   ├── chevron.svg
+│       │   │   │   ├── close.svg
+│       │   │   │   ├── edit.svg
+│       │   │   │   ├── filters.svg
+│       │   │   │   ├── history.svg
+│       │   │   │   ├── link.svg
+│       │   │   │   ├── play.svg
+│       │   │   │   ├── profile.svg
+│       │   │   │   ├── search.svg
+│       │   │   │   ├── settings.svg
+│       │   │   │   ├── share.svg
+│       │   │   │   ├── sort.svg
+│       │   │   │   └── star.svg
+│       │   │   ├── genres
+│       │   │   │   ├── cup.svg
+│       │   │   │   ├── fire.svg
+│       │   │   │   ├── happy.svg
+│       │   │   │   ├── hearts.svg
+│       │   │   │   ├── knife.svg
+│       │   │   │   ├── map.svg
+│       │   │   │   ├── music.svg
+│       │   │   │   ├── people.svg
+│       │   │   │   ├── rocket.svg
+│       │   │   │   └── tank.svg
+│       │   │   └── social
+│       │   │       ├── facebook.svg
+│       │   │       ├── gmail.svg
+│       │   │       ├── telegram.svg
+│       │   │       ├── viber.svg
+│       │   │       ├── vk.svg
+│       │   │       └── whatsapp.svg
+│       │   ├── index.ts
+│       │   ├── sprite.h.ts
+│       │   └── ui.tsx
+│       ├── input
+│       │   ├── index.ts
+│       │   ├── styles.module.scss
+│       │   └── ui.tsx
+│       ├── link
+│       │   ├── index.ts
+│       │   ├── styles.module.scss
+│       │   └── ui.tsx
+│       ├── modal
+│       │   ├── lib
+│       │   │   ├── use-escape
+│       │   │   │   ├── index.ts
+│       │   │   │   ├── use-escape.test.ts
+│       │   │   │   └── use-escape.ts
+│       │   │   └── index.ts
+│       │   ├── index.ts
+│       │   ├── styles.module.scss
+│       │   └── ui.tsx
+│       ├── movie-rating
+│       │   ├── index.ts
+│       │   ├── styles.module.scss
+│       │   └── ui.tsx
+│       ├── popup
+│       │   ├── index.ts
+│       │   ├── styles.module.scss
+│       │   └── ui.tsx
+│       ├── portal
+│       │   ├── index.ts
+│       │   └── ui.tsx
+│       ├── spinner
+│       │   ├── index.ts
+│       │   ├── styles.module.scss
+│       │   └── ui.tsx
+│       ├── tabs
+│       │   ├── index.ts
+│       │   ├── styles.module.scss
+│       │   └── ui.tsx
+│       ├── title
+│       │   ├── index.ts
+│       │   ├── styles.module.scss
+│       │   └── ui.tsx
+│       └── index.ts
+└── widgets
+    ├── auth
+    │   ├── model
+    │   │   └── index.ts
+    │   ├── ui
+    │   │   ├── email-form
+    │   │   │   ├── index.ts
+    │   │   │   ├── styles.module.scss
+    │   │   │   └── ui.tsx
+    │   │   ├── header
+    │   │   │   ├── ui
+    │   │   │   │   ├── progress
+    │   │   │   │   │   ├── index.ts
+    │   │   │   │   │   ├── styles.module.scss
+    │   │   │   │   │   └── ui.tsx
+    │   │   │   │   ├── index.tsx
+    │   │   │   │   └── styles.module.scss
+    │   │   │   └── index.ts
+    │   │   ├── message
+    │   │   │   ├── index.ts
+    │   │   │   ├── styles.module.scss
+    │   │   │   └── ui.tsx
+    │   │   ├── password-form
+    │   │   │   ├── lib
+    │   │   │   │   ├── index.ts
+    │   │   │   │   └── mask-string.ts
+    │   │   │   ├── index.ts
+    │   │   │   ├── styles.module.scss
+    │   │   │   └── ui.tsx
+    │   │   ├── transition
+    │   │   │   ├── index.ts
+    │   │   │   ├── styles.module.scss
+    │   │   │   └── ui.tsx
+    │   │   ├── index.tsx
+    │   │   └── styles.module.scss
+    │   └── index.ts
+    ├── catalog
+    │   ├── lib
+    │   │   ├── get-catalog-type
+    │   │   │   └── index.ts
+    │   │   ├── use-element-on-screen
+    │   │   │   └── index.ts
+    │   │   └── index.ts
+    │   ├── model
+    │   │   └── index.ts
+    │   ├── ui
+    │   │   ├── index.tsx
+    │   │   └── styles.module.scss
+    │   └── index.ts
+    ├── category
+    │   ├── index.ts
+    │   ├── styles.module.scss
+    │   └── ui.tsx
+    ├── facts
+    │   ├── ui
+    │   │   ├── index.tsx
+    │   │   └── styles.module.scss
+    │   └── index.ts
+    ├── header
+    │   ├── lib
+    │   │   ├── use-header-fixed
+    │   │   │   ├── index.ts
+    │   │   │   ├── use-header-fixed.test.ts
+    │   │   │   └── use-header-fixed.ts
+    │   │   └── index.ts
+    │   ├── model
+    │   │   └── index.ts
+    │   ├── ui
+    │   │   ├── burger
+    │   │   │   ├── index.ts
+    │   │   │   ├── styles.module.scss
+    │   │   │   └── ui.tsx
+    │   │   ├── logo
+    │   │   │   ├── index.ts
+    │   │   │   ├── styles.module.scss
+    │   │   │   └── ui.tsx
+    │   │   ├── menu
+    │   │   │   ├── config.ts
+    │   │   │   ├── index.ts
+    │   │   │   ├── styles.module.scss
+    │   │   │   └── ui.tsx
+    │   │   ├── nav
+    │   │   │   ├── config.ts
+    │   │   │   ├── index.ts
+    │   │   │   ├── styles.module.scss
+    │   │   │   └── ui.tsx
+    │   │   ├── profile
+    │   │   │   ├── index.ts
+    │   │   │   ├── styles.module.scss
+    │   │   │   └── ui.tsx
+    │   │   ├── search-button
+    │   │   │   ├── index.ts
+    │   │   │   ├── styles.module.scss
+    │   │   │   └── ui.tsx
+    │   │   ├── index.tsx
+    │   │   └── styles.module.scss
+    │   └── index.ts
+    └── layouts
+        ├── base-layout
+        │   ├── index.ts
+        │   └── ui.tsx
+        └── index.ts
+
+179 directories, 369 files

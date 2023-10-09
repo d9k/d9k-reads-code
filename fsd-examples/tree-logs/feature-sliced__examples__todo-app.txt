@@ -1,0 +1,63 @@
+feature-sliced__examples/todo-app/src
+├── app
+│   ├── providers
+│   │   ├── index.ts
+│   │   └── with-router.tsx
+│   ├── styles
+│   │   ├── index.scss
+│   │   ├── normalize-antd.scss
+│   │   ├── normalize.scss
+│   │   └── vars.scss
+│   ├── index.scss
+│   └── index.tsx
+├── entities
+│   └── task
+│       ├── model
+│       │   ├── index.ts
+│       │   └── tasks.ts
+│       ├── ui
+│       │   ├── task-card
+│       │   │   ├── index.tsx
+│       │   │   └── styles.module.scss
+│       │   ├── task-row
+│       │   │   ├── index.tsx
+│       │   │   └── styles.module.scss
+│       │   └── index.ts
+│       ├── index.ts
+│       └── lib.ts
+├── features
+│   ├── tasks-filters
+│   │   ├── config.ts
+│   │   ├── index.ts
+│   │   └── ui.tsx
+│   └── toggle-task
+│       ├── model
+│       │   ├── index.ts
+│       │   └── toggle-task.ts
+│       ├── index.ts
+│       └── ui.tsx
+├── pages
+│   ├── task-details
+│   │   ├── index.tsx
+│   │   └── styles.module.scss
+│   ├── tasks-list
+│   │   ├── index.tsx
+│   │   └── styles.module.scss
+│   └── index.tsx
+├── shared
+│   ├── api
+│   │   ├── typicode
+│   │   │   ├── base.ts
+│   │   │   ├── index.ts
+│   │   │   ├── models.ts
+│   │   │   └── tasks.ts
+│   │   ├── index.ts
+│   │   └── models.ts
+│   └── config
+│       └── index.ts
+├── index.tsx
+├── react-app-env.d.ts
+├── reportWebVitals.ts
+└── setupTests.ts
+
+20 directories, 40 files

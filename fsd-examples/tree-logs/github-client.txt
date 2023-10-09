@@ -1,0 +1,204 @@
+github-client/src
+├── app
+│   ├── header
+│   │   ├── hooks.ts
+│   │   ├── index.scss
+│   │   ├── index.tsx
+│   │   └── logo.svg
+│   ├── hocs
+│   │   ├── index.ts
+│   │   ├── with-antd.tsx
+│   │   ├── with-apollo.tsx
+│   │   ├── with-error-handling.tsx
+│   │   └── with-router.tsx
+│   ├── styles
+│   │   ├── normalize-antd.scss
+│   │   ├── normalize.scss
+│   │   ├── utils.scss
+│   │   └── vars.scss
+│   ├── index.scss
+│   ├── index.test.tsx
+│   └── index.tsx
+├── features
+│   ├── auth
+│   │   ├── firebase
+│   │   │   ├── auth-github.ts
+│   │   │   ├── index.ts
+│   │   │   └── init.ts
+│   │   ├── user
+│   │   │   └── index.tsx
+│   │   ├── consts.ts
+│   │   ├── hooks.ts
+│   │   ├── index.ts
+│   │   └── types.ts
+│   ├── error
+│   │   ├── catcher.tsx
+│   │   ├── definitions.ts
+│   │   ├── helpers.ts
+│   │   └── index.ts
+│   ├── hero-sheet
+│   │   ├── assets
+│   │   │   ├── bg.png
+│   │   │   ├── github-icon-sad.svg
+│   │   │   └── github-icon.svg
+│   │   ├── index.scss
+│   │   └── index.tsx
+│   ├── origin
+│   │   ├── index.scss
+│   │   └── index.tsx
+│   ├── repo-details
+│   │   ├── card-collaborators
+│   │   │   └── index.tsx
+│   │   ├── card-common
+│   │   │   └── index.tsx
+│   │   ├── details-card
+│   │   │   ├── index.scss
+│   │   │   └── index.tsx
+│   │   ├── index.scss
+│   │   ├── index.tsx
+│   │   ├── queries.gen.ts
+│   │   └── queries.gql
+│   ├── repo-explorer
+│   │   ├── components
+│   │   │   ├── branches-menu
+│   │   │   │   ├── index.scss
+│   │   │   │   └── index.tsx
+│   │   │   ├── entries-view
+│   │   │   │   ├── file.svg
+│   │   │   │   ├── folder.svg
+│   │   │   │   ├── git-file-view.tsx
+│   │   │   │   ├── index.scss
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── last-commit-header.tsx
+│   │   │   │   └── placeholder.png
+│   │   │   ├── readme
+│   │   │   │   ├── code-renderer.tsx
+│   │   │   │   ├── index.scss
+│   │   │   │   └── index.tsx
+│   │   │   ├── skeleton-area
+│   │   │   │   ├── index.scss
+│   │   │   │   └── index.tsx
+│   │   │   ├── toolbar
+│   │   │   │   ├── clone-menu.tsx
+│   │   │   │   ├── index.scss
+│   │   │   │   └── index.tsx
+│   │   │   ├── hooks.ts
+│   │   │   └── index.tsx
+│   │   ├── hooks.ts
+│   │   ├── index.ts
+│   │   ├── queries.gen.ts
+│   │   └── queries.gql
+│   ├── repo-list
+│   │   ├── items
+│   │   │   └── index.tsx
+│   │   ├── pagination
+│   │   │   └── index.tsx
+│   │   ├── tabs
+│   │   │   └── index.tsx
+│   │   ├── hooks.ts
+│   │   ├── index.scss
+│   │   ├── index.tsx
+│   │   ├── params.ts
+│   │   ├── queries.gen.ts
+│   │   └── queries.gql
+│   ├── repo-stat
+│   │   ├── fixtures.tsx
+│   │   ├── index.scss
+│   │   ├── index.tsx
+│   │   ├── queries.gen.ts
+│   │   └── queries.gql
+│   ├── search
+│   │   ├── filters
+│   │   │   ├── index.scss
+│   │   │   └── index.tsx
+│   │   ├── results
+│   │   │   ├── list
+│   │   │   │   ├── index.scss
+│   │   │   │   └── index.tsx
+│   │   │   ├── pagination
+│   │   │   │   └── index.tsx
+│   │   │   ├── toolbar
+│   │   │   │   ├── index.scss
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── sort-select.tsx
+│   │   │   ├── index.tsx
+│   │   │   ├── queries.gen.ts
+│   │   │   └── queries.gql
+│   │   ├── hooks.ts
+│   │   ├── index.tsx
+│   │   └── params.ts
+│   ├── user-info
+│   │   ├── hooks.ts
+│   │   ├── index.scss
+│   │   ├── index.tsx
+│   │   ├── queries.gen.ts
+│   │   └── queries.gql
+│   └── index.ts
+├── pages
+│   ├── auth
+│   │   ├── index.scss
+│   │   └── index.tsx
+│   ├── error
+│   │   └── index.tsx
+│   ├── home
+│   │   └── index.tsx
+│   ├── repository
+│   │   ├── index.scss
+│   │   └── index.tsx
+│   ├── search
+│   │   └── index.tsx
+│   ├── user
+│   │   ├── index.scss
+│   │   └── index.tsx
+│   ├── helpers.ts
+│   └── index.tsx
+├── shared
+│   ├── components
+│   │   ├── card
+│   │   │   ├── skeleton
+│   │   │   │   ├── index.scss
+│   │   │   │   └── index.tsx
+│   │   │   ├── skeleton-group
+│   │   │   │   └── index.tsx
+│   │   │   ├── index.scss
+│   │   │   └── index.tsx
+│   │   ├── org
+│   │   │   ├── index.scss
+│   │   │   └── index.tsx
+│   │   ├── repo
+│   │   │   ├── index.scss
+│   │   │   ├── index.tsx
+│   │   │   └── lang.tsx
+│   │   ├── simple-pagination
+│   │   │   ├── index.scss
+│   │   │   └── index.tsx
+│   │   ├── tabs
+│   │   │   ├── item
+│   │   │   │   ├── index.scss
+│   │   │   │   └── index.tsx
+│   │   │   └── index.tsx
+│   │   ├── user
+│   │   │   └── index.tsx
+│   │   └── index.ts
+│   ├── get-env
+│   │   └── index.ts
+│   ├── helpers
+│   │   ├── alert.ts
+│   │   ├── compose.ts
+│   │   ├── dom.ts
+│   │   ├── index.ts
+│   │   └── string.ts
+│   ├── hooks
+│   │   ├── index.ts
+│   │   ├── use-debounce.ts
+│   │   ├── use-local-storage.ts
+│   │   └── use-previous.ts
+│   └── mixins.scss
+├── index.tsx
+├── models.gen.ts
+├── models.ts
+├── react-app-env.d.ts
+├── serviceWorker.ts
+└── setupTests.ts
+
+56 directories, 145 files

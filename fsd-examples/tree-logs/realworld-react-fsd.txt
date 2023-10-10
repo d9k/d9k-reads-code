@@ -1,0 +1,348 @@
+realworld-react-fsd/src
+├── app
+│   ├── providers
+│   │   ├── index.tsx
+│   │   ├── QueryClientProvider.tsx
+│   │   └── RouterProvider.tsx
+│   └── index.tsx
+├── entities
+│   ├── article
+│   │   ├── api
+│   │   │   ├── msw
+│   │   │   │   ├── getGlobalArticlesHandlers.ts
+│   │   │   │   ├── getSingleArticleHandlers.ts
+│   │   │   │   └── getUserArticlesHandlers.ts
+│   │   │   ├── __tests__
+│   │   │   │   ├── useArticle.test.tsx
+│   │   │   │   ├── useGlobalInfinityArticles.test.tsx
+│   │   │   │   └── useUserInfinityArticles.test.tsx
+│   │   │   └── articleApi.ts
+│   │   ├── ui
+│   │   │   ├── article-editor
+│   │   │   │   ├── ArticleEditor.test.tsx
+│   │   │   │   └── ArticleEditor.tsx
+│   │   │   ├── article-meta
+│   │   │   │   ├── ArticleMeta.test.tsx
+│   │   │   │   └── ArticleMeta.tsx
+│   │   │   ├── article-preview-card
+│   │   │   │   ├── ArticlePreviewCard.test.tsx
+│   │   │   │   └── ArticlePreviewCard.tsx
+│   │   │   └── articles-list
+│   │   │       ├── ArticlesList.test.tsx
+│   │   │       └── ArticlesList.tsx
+│   │   └── index.ts
+│   ├── comment
+│   │   ├── api
+│   │   │   ├── msw
+│   │   │   │   └── getArticlesCommentsHandlers.ts
+│   │   │   ├── commentApi.test.ts
+│   │   │   └── commentApi.ts
+│   │   ├── ui
+│   │   │   └── comment-card
+│   │   │       ├── CommentCard.test.tsx
+│   │   │       └── CommentCard.tsx
+│   │   └── index.ts
+│   ├── profile
+│   │   ├── api
+│   │   │   ├── msw
+│   │   │   │   └── getProfileByUsernameHandlers.ts
+│   │   │   ├── profileApi.test.ts
+│   │   │   └── profileApi.ts
+│   │   ├── @x
+│   │   │   ├── article.ts
+│   │   │   └── comment.ts
+│   │   └── index.ts
+│   ├── session
+│   │   ├── api
+│   │   │   ├── msw
+│   │   │   │   └── getCurrentUserHandlers.ts
+│   │   │   ├── sessionApi.test.ts
+│   │   │   └── sessionApi.ts
+│   │   ├── model
+│   │   │   ├── sessionModel.test.ts
+│   │   │   └── sessionModel.ts
+│   │   ├── ui
+│   │   │   ├── auth-guard
+│   │   │   │   └── AuthGuard.tsx
+│   │   │   └── guest-guard
+│   │   │       └── GuestGuard.tsx
+│   │   └── index.ts
+│   └── tag
+│       ├── api
+│       │   ├── msw
+│       │   │   └── getTagsHandlers.ts
+│       │   ├── tagApi.test.ts
+│       │   └── tagApi.ts
+│       └── index.ts
+├── features
+│   ├── article
+│   │   ├── create
+│   │   │   ├── api
+│   │   │   │   ├── msw
+│   │   │   │   │   └── postCreateArticleHandlers.ts
+│   │   │   │   ├── createArticle.test.ts
+│   │   │   │   └── createArticle.ts
+│   │   │   └── index.ts
+│   │   ├── delete
+│   │   │   ├── api
+│   │   │   │   ├── msw
+│   │   │   │   │   └── deleteArticleHandlers.ts
+│   │   │   │   ├── deleteArticle.test.ts
+│   │   │   │   └── deleteArticle.ts
+│   │   │   ├── ui
+│   │   │   │   └── delete-article-button
+│   │   │   │       ├── DeleteArticleButton.test.tsx
+│   │   │   │       └── DeleteArticleButton.tsx
+│   │   │   └── index.ts
+│   │   ├── favorite
+│   │   │   ├── base
+│   │   │   │   ├── api
+│   │   │   │   │   └── baseModel.ts
+│   │   │   │   ├── lib
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── updateInfinityData.test.ts
+│   │   │   │   │   └── updateInfinityData.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── favorite-article
+│   │   │   │   ├── api
+│   │   │   │   │   ├── msw
+│   │   │   │   │   │   └── postFavoriteArticleHandlers.ts
+│   │   │   │   │   ├── favoriteArticles.test.ts
+│   │   │   │   │   └── favoriteArticle.ts
+│   │   │   │   ├── ui
+│   │   │   │   │   └── favorite-article-button
+│   │   │   │   │       ├── FavoriteArticleButton.test.tsx
+│   │   │   │   │       └── FavoriteArticleButton.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── unfavorite-article
+│   │   │   │   ├── api
+│   │   │   │   │   ├── msw
+│   │   │   │   │   │   └── deleteUnfavoriteArticleHandlers.ts
+│   │   │   │   │   ├── unfavoriteArticle.test.ts
+│   │   │   │   │   └── unfavoriteArticle.ts
+│   │   │   │   ├── ui
+│   │   │   │   │   └── unfavorite-article-button
+│   │   │   │   │       ├── UnfavoriteArticleButton.test.tsx
+│   │   │   │   │       └── UnfavoriteArticleButton.tsx
+│   │   │   │   └── index.ts
+│   │   │   └── index.ts
+│   │   ├── update
+│   │   │   ├── api
+│   │   │   │   ├── msw
+│   │   │   │   │   └── putUpdateArticleHandlers.ts
+│   │   │   │   ├── updateArticle.test.ts
+│   │   │   │   └── updateArticle.ts
+│   │   │   └── index.ts
+│   │   └── index.ts
+│   ├── comment
+│   │   ├── create
+│   │   │   ├── api
+│   │   │   │   ├── msw
+│   │   │   │   │   └── postCreateCommentHandlers.ts
+│   │   │   │   ├── createComment.test.ts
+│   │   │   │   └── createComment.ts
+│   │   │   └── index.ts
+│   │   ├── delete
+│   │   │   ├── api
+│   │   │   │   ├── msw
+│   │   │   │   │   └── deleteCommentHandlers.ts
+│   │   │   │   ├── deleteComment.test.ts
+│   │   │   │   └── deleteComment.ts
+│   │   │   ├── ui
+│   │   │   │   └── delete-comment-icon-button
+│   │   │   │       ├── DeleteCommentIconButton.test.tsx
+│   │   │   │       └── DeleteCommentIconButtton.tsx
+│   │   │   └── index.ts
+│   │   └── index.ts
+│   ├── profile
+│   │   ├── follow
+│   │   │   ├── base
+│   │   │   │   └── api
+│   │   │   │       └── baseModel.ts
+│   │   │   ├── follow-profile
+│   │   │   │   ├── api
+│   │   │   │   │   ├── msw
+│   │   │   │   │   │   └── postFollowUserHandlers.ts
+│   │   │   │   │   ├── followUser.test.ts
+│   │   │   │   │   └── followUser.ts
+│   │   │   │   ├── ui
+│   │   │   │   │   └── follow-user-button
+│   │   │   │   │       ├── FollowUserButton.test.tsx
+│   │   │   │   │       └── FollowUserButton.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── unfollow-profile
+│   │   │   │   ├── api
+│   │   │   │   │   ├── msw
+│   │   │   │   │   │   └── deleteUnfollowUserHandlers.ts
+│   │   │   │   │   ├── unfollowUser.test.ts
+│   │   │   │   │   └── unfollowUser.ts
+│   │   │   │   ├── ui
+│   │   │   │   │   └── unfollow-user-button
+│   │   │   │   │       ├── UnfollowUserButton.test.tsx
+│   │   │   │   │       └── UnfollowUserButton.tsx
+│   │   │   │   └── index.ts
+│   │   │   └── index.ts
+│   │   └── index.ts
+│   └── session
+│       ├── create
+│       │   ├── api
+│       │   │   └── createUser.ts
+│       │   └── index.ts
+│       ├── login
+│       │   ├── api
+│       │   │   └── loginUser.ts
+│       │   └── index.ts
+│       ├── logout
+│       │   ├── api
+│       │   │   └── logout.ts
+│       │   ├── ui
+│       │   │   └── logout-button
+│       │   │       └── LogoutButton.tsx
+│       │   └── index.ts
+│       ├── update-current-user
+│       │   ├── api
+│       │   │   └── updateCurrentUser.ts
+│       │   └── index.ts
+│       └── index.ts
+├── pages
+│   ├── article
+│   │   ├── ArticlePage.tsx
+│   │   └── index.ts
+│   ├── editor
+│   │   ├── EditorPage.tsx
+│   │   └── index.ts
+│   ├── home
+│   │   ├── HomePage.tsx
+│   │   └── index.ts
+│   ├── layouts
+│   │   ├── main-layout
+│   │   │   └── MainLayout.tsx
+│   │   └── index.ts
+│   ├── login
+│   │   ├── index.ts
+│   │   └── LoginPage.tsx
+│   ├── page-404
+│   │   ├── index.ts
+│   │   ├── page404.module.css
+│   │   └── Page404.tsx
+│   ├── profile
+│   │   ├── index.ts
+│   │   └── ProfilePage.tsx
+│   ├── register
+│   │   ├── index.ts
+│   │   └── RegisterPage.tsx
+│   └── settings
+│       ├── index.ts
+│       └── SettingsPage.tsx
+├── shared
+│   ├── api
+│   │   ├── msw
+│   │   │   ├── config
+│   │   │   │   ├── articles.json
+│   │   │   │   ├── comments.json
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── profiles.json
+│   │   │   │   ├── tags.json
+│   │   │   │   └── user.json
+│   │   │   ├── lib
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── mapMswArticleDto.ts
+│   │   │   │   ├── mapMswCommentDto.ts
+│   │   │   │   ├── mapMswProfileDto.ts
+│   │   │   │   ├── parseTokenFromRequest.ts
+│   │   │   │   └── wait.ts
+│   │   │   ├── index.ts
+│   │   │   ├── serverDatabase.ts
+│   │   │   └── server.ts
+│   │   └── realworld
+│   │       ├── Api.ts
+│   │       └── index.ts
+│   ├── lib
+│   │   ├── react-query
+│   │   │   ├── index.ts
+│   │   │   ├── queryClient.ts
+│   │   │   └── utils.tsx
+│   │   ├── react-router
+│   │   │   ├── index.ts
+│   │   │   ├── paths.ts
+│   │   │   └── utils.ts
+│   │   └── test
+│   │       └── setup.ts
+│   ├── ui
+│   │   ├── button
+│   │   │   ├── Button.test.tsx
+│   │   │   ├── Button.tsx
+│   │   │   └── index.ts
+│   │   ├── error-handler
+│   │   │   ├── ErrorHandler.test.tsx
+│   │   │   ├── ErrorHandler.tsx
+│   │   │   └── index.ts
+│   │   ├── full-page-error
+│   │   │   ├── fullPageError.module.css
+│   │   │   ├── FullPageError.tsx
+│   │   │   └── index.ts
+│   │   ├── full-page-wrapper
+│   │   │   ├── full-page-wrapper.module.css
+│   │   │   ├── FullPageWrapper.tsx
+│   │   │   └── index.ts
+│   │   ├── loadable
+│   │   │   ├── index.ts
+│   │   │   └── Loadable.tsx
+│   │   └── spinner
+│   │       ├── index.ts
+│   │       ├── spinner.module.css
+│   │       └── Spinner.tsx
+│   └── main.css
+└── widgets
+    ├── article-meta
+    │   ├── ui
+    │   │   ├── current-user-article-meta
+    │   │   │   └── CurrentUserArticleMeta.tsx
+    │   │   ├── guest-article-meta
+    │   │   │   └── GuestArticleMeta.tsx
+    │   │   ├── user-article-meta
+    │   │   │   └── UserArticleMeta.tsx
+    │   │   └── index.ts
+    │   └── index.ts
+    ├── comments-list
+    │   ├── ui
+    │   │   └── comments-list
+    │   │       └── CommentsList.tsx
+    │   └── index.ts
+    ├── current-article-editor
+    │   ├── ui
+    │   │   └── new-article-editor
+    │   │       └── CurrentArticleEditor.tsx
+    │   └── index.ts
+    ├── global-articles-list
+    │   ├── ui
+    │   │   └── global-articles-list
+    │   │       └── GlobalArticlesList.tsx
+    │   └── index.ts
+    ├── new-article-editor
+    │   ├── ui
+    │   │   └── new-article-editor
+    │   │       └── NewArticleEditor.tsx
+    │   └── index.ts
+    ├── new-comment-editor
+    │   ├── ui
+    │   │   └── new-comment-editor
+    │   │       └── NewCommentEditor.tsx
+    │   └── index.ts
+    ├── popular-tags
+    │   ├── ui
+    │   │   └── popular-tags
+    │   │       └── PopularTags.tsx
+    │   └── index.ts
+    ├── profile-card
+    │   ├── ui
+    │   │   └── profile-card
+    │   │       └── ProfileCard.tsx
+    │   └── index.ts
+    └── user-articles-list
+        ├── ui
+        │   └── user-articles-list
+        │       └── UserArticlesList.tsx
+        └── index.ts
+
+150 directories, 195 files

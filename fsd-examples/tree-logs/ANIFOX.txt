@@ -1,0 +1,548 @@
+ANIFOX/src
+├── app
+│   ├── providers
+│   │   ├── index.ts
+│   │   ├── with-react-query.tsx
+│   │   ├── with-resize-observer.tsx
+│   │   ├── with-router.tsx
+│   │   └── with-viewer-fetcher.tsx
+│   ├── styles
+│   │   ├── global.pcss
+│   │   └── tailwind.pcss
+│   ├── index.pcss
+│   └── index.tsx
+├── entities
+│   ├── media
+│   │   ├── media-card
+│   │   │   ├── lib
+│   │   │   │   ├── getMediaAccentColorStyles.ts
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── translateAnimeType.ts
+│   │   │   │   ├── translateMediaSeason.ts
+│   │   │   │   └── translateMediaStatus.ts
+│   │   │   ├── ui
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   └── index.ts
+│   │   ├── related-media-card
+│   │   │   ├── ui
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   └── index.ts
+│   │   ├── similar-media-card
+│   │   │   ├── ui
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   └── index.ts
+│   │   └── index.ts
+│   ├── media-status
+│   │   ├── lib
+│   │   │   ├── addСolorsToStatusDistribution.ts
+│   │   │   └── index.ts
+│   │   ├── ui
+│   │   │   ├── status-distribution-chart
+│   │   │   │   ├── CustomLegend
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── CustomTooltip
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   └── index.ts
+│   │   └── index.ts
+│   ├── player
+│   │   ├── lib
+│   │   │   ├── getPlayerLinkFromParams.ts
+│   │   │   └── index.ts
+│   │   ├── ui
+│   │   │   ├── playback-handler
+│   │   │   │   └── index.tsx
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── rating
+│   │   └── rating-button
+│   │       ├── lib
+│   │       │   ├── getRatingColor.ts
+│   │       │   ├── get-rating-distribution-with-percentage.ts
+│   │       │   └── index.ts
+│   │       ├── model
+│   │       │   ├── distribution-rating.ts
+│   │       │   └── index.ts
+│   │       ├── ui
+│   │       │   ├── rating-distribution
+│   │       │   │   ├── colors.module.pcss
+│   │       │   │   ├── index.tsx
+│   │       │   │   └── styles.module.pcss
+│   │       │   ├── rating-icon
+│   │       │   │   └── index.tsx
+│   │       │   ├── index.tsx
+│   │       │   └── styles.module.pcss
+│   │       └── index.ts
+│   └── viewer
+│       ├── model
+│       │   ├── index.ts
+│       │   └── viewer.ts
+│       ├── ui
+│       │   └── index.ts
+│       └── index.ts
+├── features
+│   ├── anime-favorite-list
+│   │   └── add-anime-to-favorite-list
+│   │       └── index.ts
+│   ├── anime-list-filter
+│   │   ├── model
+│   │   │   ├── anime-list-filter.ts
+│   │   │   ├── extra-filtrer.ts
+│   │   │   └── index.ts
+│   │   ├── ui
+│   │   │   ├── extra-filter
+│   │   │   │   ├── extra-filter-dropdown
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── filter-items-mobile
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── filters-selects
+│   │   │   │   ├── anime-type
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── genres
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── minimal-age
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── rating-mpa
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── search
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── season
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── status
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── studios
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── translation
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── years
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── filter-tags
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── auth
+│   │   ├── by-local
+│   │   │   ├── lib
+│   │   │   │   ├── auth-by-local-error-mapper.ts
+│   │   │   │   ├── get-validation-schema.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── model
+│   │   │   │   ├── auth-by-local.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── ui
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   └── index.ts
+│   │   ├── by-shikimori
+│   │   │   ├── model
+│   │   │   │   ├── auth-by-shikimori.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── ui
+│   │   │   │   ├── shikimori-interceptor
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── index.ts
+│   │   │   └── index.ts
+│   │   └── login
+│   │       ├── lib
+│   │       │   ├── get-validation-schema.ts
+│   │       │   ├── index.ts
+│   │       │   └── login-error-mapper.ts
+│   │       ├── model
+│   │       │   ├── index.ts
+│   │       │   └── login.ts
+│   │       ├── ui
+│   │       │   └── index.tsx
+│   │       └── index.ts
+│   ├── catalog-search
+│   │   ├── model
+│   │   │   ├── catalog-search.ts
+│   │   │   └── index.ts
+│   │   ├── ui
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── favorite-media
+│   │   └── add-media-to-favorites
+│   │       ├── ui
+│   │       │   ├── add-media-to-favorites-button
+│   │       │   │   ├── index.tsx
+│   │       │   │   └── styles.module.pcss
+│   │       │   └── index.ts
+│   │       └── index.ts
+│   ├── manga-list-filter
+│   │   ├── model
+│   │   │   ├── index.ts
+│   │   │   └── manga-list-filter.ts
+│   │   ├── ui
+│   │   │   ├── filter-tags
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── search
+│   │   │   │   └── index.tsx
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── media-status
+│   │   └── set-media-status
+│   │       ├── ui
+│   │       │   ├── set-media-status-button
+│   │       │   │   ├── index.tsx
+│   │       │   │   └── styles.module.pcss
+│   │       │   └── index.ts
+│   │       └── index.ts
+│   └── toggle-theme
+│       ├── model
+│       │   ├── index.ts
+│       │   └── theme.ts
+│       ├── ui
+│       │   ├── index.tsx
+│       │   └── styles.module.pcss
+│       └── index.ts
+├── layouts
+│   └── main-layout
+│       ├── ui
+│       │   ├── index.tsx
+│       │   └── styles.module.pcss
+│       └── index.ts
+├── pages
+│   ├── anime-detailing-page
+│   │   ├── api
+│   │   │   ├── index.ts
+│   │   │   ├── useGetAnimeImages.ts
+│   │   │   └── useGetAnimeTrailers.ts
+│   │   ├── ui
+│   │   │   ├── anime-content
+│   │   │   │   ├── anime-list-manage-btns
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── anime-rating
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── bg-image
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── description
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── info
+│   │   │   │   │   ├── characteristics
+│   │   │   │   │   │   └── index.tsx
+│   │   │   │   │   ├── genres
+│   │   │   │   │   │   └── index.tsx
+│   │   │   │   │   ├── studios
+│   │   │   │   │   │   └── index.tsx
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── anime-status-distribution-chart
+│   │   │   │   └── index.tsx
+│   │   │   ├── page-player
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── preview-media
+│   │   │   │   ├── frames
+│   │   │   │   │   ├── image-item
+│   │   │   │   │   │   ├── index.tsx
+│   │   │   │   │   │   └── styles.module.pcss
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── trailers
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── light-gallery.css
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── related-anime-list
+│   │   │   │   └── index.tsx
+│   │   │   └── index.ts
+│   │   └── index.tsx
+│   ├── anime-page
+│   │   └── index.tsx
+│   ├── auth-page
+│   │   └── index.tsx
+│   ├── home-page
+│   │   └── index.tsx
+│   ├── main-page
+│   │   └── index.tsx
+│   ├── manga-detailing-page
+│   │   ├── ui
+│   │   │   ├── manga-content
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── similar-manga-list
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   └── index.ts
+│   │   ├── index.tsx
+│   │   └── styles.module.pcss
+│   ├── manga-page
+│   │   ├── ui
+│   │   │   ├── manga-list
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   └── index.ts
+│   │   └── index.tsx
+│   ├── profile-page
+│   │   ├── ui
+│   │   │   ├── banner
+│   │   │   │   ├── banner-content
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── styles.module.pcss
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── profile-tabs
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   └── index.ts
+│   │   └── index.tsx
+│   ├── right-holders-page
+│   │   ├── index.tsx
+│   │   └── styles.module.pcss
+│   ├── settings-page
+│   │   └── index.tsx
+│   ├── watch-page
+│   │   └── index.tsx
+│   └── index.tsx
+├── shared
+│   ├── api
+│   │   ├── http
+│   │   │   ├── authHttp.ts
+│   │   │   ├── index.ts
+│   │   │   └── publicHttp.ts
+│   │   ├── lib
+│   │   │   ├── create-array-query-param.ts
+│   │   │   └── index.ts
+│   │   ├── models
+│   │   │   ├── index.ts
+│   │   │   └── manga.ts
+│   │   ├── queries
+│   │   │   ├── anime
+│   │   │   │   ├── get-anime-genres
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── get-anime-studios
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── get-anime-translation
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── types.ts
+│   │   │   │   ├── get-anime-years
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── use-get-anime-by-url
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── types.ts
+│   │   │   │   ├── use-get-anime-episodes
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── types.ts
+│   │   │   │   │   └── use-get-anime-episodes.ts
+│   │   │   │   ├── use-get-anime-list
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── types.ts
+│   │   │   │   │   └── use-get-anime-list.ts
+│   │   │   │   ├── use-get-anime-rating
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── use-get-anime-rating.ts
+│   │   │   │   ├── use-get-favorite-list-distribution
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── use-get-favorite-list-distribution.ts
+│   │   │   │   ├── use-get-related-anime
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── types.ts
+│   │   │   │   │   └── use-get-related-anime.ts
+│   │   │   │   ├── use-get-similar-anime
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── use-get-similar-anime.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── manga
+│   │   │   │   ├── useGetMangaById
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── useGetMangaById.ts
+│   │   │   │   ├── useGetMangaList
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── useGetMangaList.ts
+│   │   │   │   ├── useGetMangaSimilar
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── useGetMangaSimilar.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── viewer
+│   │   │   │   ├── use-add-anime-to-favorite-list-mutation
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── types.ts
+│   │   │   │   │   └── use-add-anime-to-favorite-list-mutation.ts
+│   │   │   │   ├── use-set-anime-rating-mutation
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── types.ts
+│   │   │   │   │   └── use-set-anime-rating-mutation.ts
+│   │   │   │   └── index.ts
+│   │   │   └── index.ts
+│   │   └── index.ts
+│   ├── components
+│   │   ├── avatar
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   ├── badge
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   ├── button
+│   │   │   ├── colors.module.pcss
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   ├── input
+│   │   │   ├── index.tsx
+│   │   │   ├── sizes.module.pcss
+│   │   │   └── styles.module.pcss
+│   │   ├── modal
+│   │   │   ├── index.tsx
+│   │   │   ├── styles.module.pcss
+│   │   │   └── variants.ts
+│   │   ├── multi-select
+│   │   │   ├── multi-select-dropdown
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   ├── portal
+│   │   │   └── index.tsx
+│   │   ├── select
+│   │   │   ├── select-dropdown
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   ├── site-logo
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   ├── suspense-page-loader
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   ├── tabs
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   ├── tooltip
+│   │   │   ├── index.tsx
+│   │   │   ├── positions.module.pcss
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── config
+│   │   └── index.ts
+│   ├── enums
+│   │   └── index.ts
+│   ├── hooks
+│   │   ├── index.ts
+│   │   ├── useDebounce.ts
+│   │   ├── useDisableScroll.ts
+│   │   ├── useHover.ts
+│   │   ├── useImageLoading.ts
+│   │   ├── useMousePosition.ts
+│   │   ├── useOnClickOutside.ts
+│   │   ├── useOnKeyDown.ts
+│   │   ├── usePageOffset.ts
+│   │   ├── useScreenSize.ts
+│   │   └── useSwipe.ts
+│   ├── lib
+│   │   ├── colors
+│   │   │   ├── hexToHSL.ts
+│   │   │   ├── hexToHue.ts
+│   │   │   ├── hexToRgb.ts
+│   │   │   ├── hslToHex.ts
+│   │   │   └── index.ts
+│   │   └── user
+│   │       ├── getUserDeviceType.ts
+│   │       └── index.ts
+│   └── types
+│       ├── axios-error-response.ts
+│       ├── breakpoints.ts
+│       ├── components.ts
+│       ├── index.ts
+│       └── ui-colors.ts
+├── widgets
+│   ├── anime-card
+│   │   ├── ui
+│   │   │   ├── right-panel
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── styles.module.pcss
+│   │   │   │   └── variants.ts
+│   │   │   └── index.tsx
+│   │   └── index.ts
+│   ├── anime-list
+│   │   ├── index.tsx
+│   │   └── styles.module.pcss
+│   ├── auth-form
+│   │   ├── ui
+│   │   │   ├── auth-by-services
+│   │   │   │   ├── assets
+│   │   │   │   │   ├── google-logo.webp
+│   │   │   │   │   ├── shikomori-logo.svg
+│   │   │   │   │   └── vk-logo.webp
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── footer
+│   │   ├── ui
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── header
+│   │   ├── ui
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── mobile-nav-menu
+│   │   ├── model
+│   │   │   ├── index.ts
+│   │   │   └── mobile-nav-menu.ts
+│   │   ├── ui
+│   │   │   ├── menu-toggle
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── nav-items
+│   │   │   │   ├── index.tsx
+│   │   │   │   └── styles.module.pcss
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── notice-panel
+│   │   ├── ui
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── player
+│   │   ├── lib
+│   │   │   ├── getPlayerLinkFromParams.ts
+│   │   │   └── index.ts
+│   │   ├── ui
+│   │   │   ├── index.tsx
+│   │   │   └── styles.module.pcss
+│   │   └── index.ts
+│   ├── related-media-list
+│   │   └── index.tsx
+│   ├── similar-media-list
+│   │   ├── index.tsx
+│   │   └── styles.module.pcss
+│   └── user-panel
+│       ├── ui
+│       │   ├── dropdown
+│       │   │   ├── index.tsx
+│       │   │   └── styles.module.pcss
+│       │   ├── index.tsx
+│       │   └── styles.module.pcss
+│       └── index.ts
+├── main.tsx
+└── vite-env.d.ts
+
+202 directories, 343 files

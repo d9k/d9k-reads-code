@@ -1,6 +1,6 @@
 # Vue Flow: interesting findings
 
-## Event handlers names from events names
+## #TS: event handlers names from events names
 
 - :page_with_curl:`hooks.ts` in :open_file_folder:`packages/core/src/types`:
 

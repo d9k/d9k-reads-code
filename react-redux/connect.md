@@ -1,4 +1,4 @@
-# React-redux
+# React-redux: connect
 
 ## How Redux `<Provider>` works?
 

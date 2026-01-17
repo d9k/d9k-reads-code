@@ -100,7 +100,7 @@
 		- `readTrue()`
 			- Expects `rue` chars consequently
 		- `readString()`
-			- `nPlace: boolean = true` // when inPlace is true, no need to copy chars
+			- `inPlace: boolean = true` // when inPlace is true, no need to copy chars
 			- `do ... while(true)`
 				- if `ch >= 0x20 && ch != 0x22 && ch != 0x5c`
 					- if `!inPlace`

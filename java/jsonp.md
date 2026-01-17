@@ -31,6 +31,7 @@
 		- :robot_face: При сдвиге данных в буфере (в `fillBuf()`) `bufferOffset` увеличивается на количество обработанных символов.
 	- `lastLineOffset: int` -  offset of the last \r\n or \n. used to calculate column number // of a token or an error.
 	- `nextToken(): JsonToken`
+		- Здесь происходит посимвольный разбор
 	- `readString()`
 		- `storeBegin = storeEnd = readBegin`
 	- `read()`
@@ -60,7 +61,7 @@
 				- `} while (!(token == JsonToken.SQUARECLOSE && depth == 0));`
 	- `final class JsonTokenizer implements Closeable {`
 
-## Event?
+## How event is formed
 
 - :symbols::mag_right: `KEY_NAME`
 
@@ -71,3 +72,42 @@
 		- `next(): Event`
 			- `currentEvent = currentContext.getNextEvent()`
 	- :package: `NoneContext`
+		- `extends Context `
+		- `getNextEvent(): Event`
+			- `JsonToken token = tokenizer.nextToken()`
+			- if `token == JsonToken.CURLYOPEN`
+				- `return Event.START_OBJECT`
+			- if `token == JsonToken.SQUAREOPEN`
+				- `return Event.START_ARRAY`
+			- if `token.isValue()`
+				- `return token.getEvent()`
+					- :package: `enum JsonToken`
+						- ` getEvent(): JsonParser.Event`
+							- `return event`
+
+## How token is read
+
+- :open_file_folder: `impl/src/main/java/org/glassfish/json/JsonTokenizer.java`
+	- :package: `JsonTokenizer`
+		- `nextToken()`
+			- case `t`
+                - `readTrue();`
+                - `return JsonToken.TRUE`
+			- case `"`
+				- `readString()`
+				- `return JsonToken.STRING`
+			- //  . . . . .
+		- `readTrue()`
+			- Expects `rue` chars consequently
+		- `readString()`
+			- `nPlace: boolean = true` // when inPlace is true, no need to copy chars
+			- `do ... while(true)`
+				- if `ch >= 0x20 && ch != 0x22 && ch != 0x5c`
+					- if `!inPlace`
+						- `buf[storeEnd] = (char)ch`
+				- case `"`
+					- return
+				- case `\\`
+					- `inPlace = false`  // Now onwards need to copy chars
+					- `unescape()`
+					- `break`

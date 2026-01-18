@@ -35,7 +35,7 @@
 	- `readString()`
 		- `storeBegin = storeEnd = readBegin`
 	- `read()`
-		- if `readBegin == readEnd` // need to fill the buffer`
+		- if `readBegin == readEnd` // need to fill the buffer
 			- `len = fillBuf()`
 		- отличается от peek только тем, что происходит инкремент:
 			- `return buf[readBegin++]`

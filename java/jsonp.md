@@ -25,7 +25,7 @@
 - :open_file_folder: `impl/src/main/java/org/glassfish/json/JsonTokenizer.java`
 	- `readBegin`, `readEnd`: `int` — :robot_face: указатели для чтения из буфера
 	- `storeBegin`, `storeEnd`: `int` - :robot_face: указатели для хранения значений токенов. Начало и конец текущего токена (строки, числа).
-		- :robot_face:  Между `storeBegin` и `storeEnd`** — символы текущего токена (например, строки без кавычек или числа).
+		- :robot_face:  Между `storeBegin` и `storeEnd` — символы текущего токена (например, строки без кавычек или числа).
 		- :robot_face: После парсинга токена методы `getValue()`, `getBigDecimal()` используют эти индексы для извлечения значения.
 	- `bufferOffset`: `int` -  offset in the stream for the start of the buffer, will be used in calculating JsonLocation's stream offset,  bufferOffsetcolumn no.
 		- :robot_face: При сдвиге данных в буфере (в `fillBuf()`) `bufferOffset` увеличивается на количество обработанных символов.

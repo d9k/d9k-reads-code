@@ -68,6 +68,14 @@
 				- `tile = instance:getTile()`
 				- `postSolve(instance, tile, layer, x, y, ...)`
 
-## Culling
+## Culling (TODO)
 
-TODO
+- :open_file_folder: `physo.lua`
+	- Закомментировано `self:WorldQuery()
+		- Параметром должно быть `camera:getBoundingBox()`
+
+- :open_file_folder: `camera.lua`
+	- `camera:position()`
+		- `self.x, self.y`
+	- `camera:getBoundingBox()` тоже надо написать
+

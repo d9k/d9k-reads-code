@@ -12,7 +12,7 @@
 
 - :open_file_folder: `physo.lua`
 	- for `k, v` in `pairs(self.World_BodiesToUpdate)` do
-		- `if `v.draw`
+		- if `v.draw`
 			- `v:draw()`
 
 - :open_file_folder: `map/types.lua`

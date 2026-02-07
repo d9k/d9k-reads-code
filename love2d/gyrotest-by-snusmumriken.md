@@ -36,7 +36,7 @@
 		- for `k, v` in `pairs(self.World_BodiesToUpdate)`
 			- `if v.update then v:update(dt) end`
 
-## Create world body
+## Creation and declaration of world bodies
 
 - :open_file_folder: `physo.lua`
 	- `physo:createBody(x, y, bodytype, shape)`
@@ -47,6 +47,26 @@
 	- `Brick:new(x, y, tile)`
 		- `self:createBody(x, y)`
 		- `self.tile = tile`
+		- `return { [0]  = Wall, [4]  = Laser, [11] = Cube, [12] = Brick, … }`
+			- :link: `game.load()`
+
+- :open_file_folder: `game.lua`
+	- `game:load(path)`
+		- `self.path = path or 'map/map1.lua'`
+		- `self.map = require'tiled':new(self.path)`
+		- `Tileclasses = require'map.types'`
+		- fn `mapper(instance, tile, layer, x, y)`
+			- `class = Tileclasses[instance.idV`
+			- `instance.obj = class(x, y, instance)`
+		- `map:mapTiles(mapper, _, switchSwitches)`
+
+- :open_file_folder: `tiled.lua`
+	- `map:mapTiles(callback, preSolve, postSolve, ...)`
+		- `layers = self:getLayers(… l.type == "tilelayer")`
+		- for `layer` in `layers`
+			- for `instance` in `layer.data`
+				- `tile = instance:getTile()`
+				- `postSolve(instance, tile, layer, x, y, ...)`
 
 ## Culling
 

@@ -29,3 +29,15 @@
 - :open_file_folder: `src/cameras/2d/BaseCamera.js`
 	- `cull(renderableObjects)`
 		- if `disableCull`
+
+### Camera
+
+- :package: `BaseCamera`
+	- :open_file_folder: `src/cameras/2d/BaseCamera.js`
+		- constructor
+			- `EventEmitter.call(this);`
+				- 🡤 `EventEmitter = require('eventemitter3')`
+		- `scrollX` - the horizontal scroll position of this Camera. Change this value to cause the Camera to scroll around your Scene. Alternatively, setting the Camera to follow a Game Object, via the startFollow method, will automatically adjust the Camera scroll values accordingly.
+		- `cameraManager` - A reference to the Scene's `CameraManager` to which this Camera belongs.
+		- `worldWiew` - The World View is a Rectangle that defines the area of the 'world' the Camera is currently looking at. This factors in the Camera viewport size, zoom and scroll position and is updated in the Camera preRender step.
+			- `= new Rectangle()`

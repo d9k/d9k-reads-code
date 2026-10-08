@@ -39,7 +39,7 @@
 
 #### ACL
 
-Anti-Corruption Layer: доменный контекст `cart/` не импортирует типы доменного контекста `productcatalog/` напрямую. Вместо этого есть слой трансформации `transformProductCatalog` который преобразует `productcatalog.Variant` в собственную модель `domain.Product`.
+Anti-Corruption Layer: доменный контекст `cart/` не импортирует типы доменного контекста `productcatalog/` напрямую. Вместо этого есть слой трансформации: адаптер `transformProductCatalog` который преобразует `productcatalog.Variant` в собственную модель `domain.Product`.
 
 :open_file_folder: `backend/cmd/web/main.go`
 
@@ -60,6 +60,8 @@ func main() {
 ```
 
 :open_file_folder: `backend/cart/app/cart.go`
+
+Порт потребителя - ProductCatalog - относится к архитектурному паттерну «Гексагональная архитектура» (она же Ports and Adapters). **Порт потребителя** — это **интерфейс уровня приложения**, который определяет, какие действия внешние клиенты (потребители) могут совершать с нашей бизнес-логикой.
 
 ```go
 type CartService struct {
@@ -87,6 +89,11 @@ func NewCartService( // A: declaration
 ```go
 package cart
 
+import ( pcdomain "github.com/bkielbasa/go-ecommerce/backend/productcatalog/domain" )
+
+/** Только domain импортируется из productCatalog  */
+import(pcdomain "github.com/bkielbasa/go-ecommerce/backend/productcatalog/domain")
+
 func New(db *sql.DB, logger logrus.FieldLogger, pc productStorage) (application.BoundedContext, app.CartService) { // C: declaration
 	// . . . . .
 	srv := app.NewCartService( // A: usage
@@ -103,6 +110,7 @@ func (
 	variantID string,
 ) (domain.Product, error) {
 	p, v, err := tpc.pc.FindVariant(ctx, variantID) // 4: usage
+	/** Берутся ошибки из другого домена, заменяются на ошибки из своего домена, иногда с таким же названием и текстом. Пример: domain.ErrProductNotFound <- pcdomain.ErrProductNotFound */
 	// . . . . .
 	domain.NewProduct(v.ID(), name, v.Price().Amount(), cur), nil
 }
@@ -143,7 +151,26 @@ func (db postgres) FindVariant(ctx context.Context, variantID string) (domain.Pr
 
 Это защищает `cart` от изменений в vocabulary productcatalog.
 
+> 🗣️️ Как-то многовато слоёв. Это самая короткая имплементация из возможных или возможно короче?
+
+🤖 Qwen Flash:
+
+Пункт README «Anti-Corruption Layer» (`README.md`) говорит, что трансформация «**re-checking stock and currency**» — то есть повторная проверка остатка и валюты — это и есть назначение этих строк. ACL не просто конвертирует типы из формата A в формат B — он **валидирует данные чужого контекста по своим инвариантам** перед тем, как впустить их в свой домен. Убрав эти четыре блока, вы превратите `transformProductCatalog` в тупой type-cast, и инварианты cart перестанут защищаться от изменений словари `productcatalog` (завтра каталог начнёт возвращать `Currency("EU")` или снятый с продажи вариант — и это молча протечёт в корзину).
+
+в рамках выбора «ACL» это минимальная имплементация. «Многовато слоёв» — это не раздутость кода, а фиксированная налоговая ставка паттерна: 1 порт + 1 адаптер + 1 локальный интерфейс. Всё остальное в вашей цепочке (`New`, `NewCartService`, делегация в `ProductService`) — это обычная композиция гексагональной архитектуры, которая была бы и без ACL.
+
+> 🗣️️ Короче, DDD похож на выделение микросервисов из монолита
+
+🤖 Qwen Flash: Аналогия верна наполовину — и именно в этом суть
+Сходство (почему вы так решили): границы bounded contexts действительно выглядят как границы микросервисов: свои модели (у cart свой Product, у productcatalog свой), свои таблицы в миграциях с префиксом контекста (`cart_*`, `checkout_*`, `productcatalog_*`), свои интеграционные паттерны (ACL, Published Language, Outbox/Inbox) — это ровно тот же инструментарий, что применяют при проектировании сервисов. Есть даже поговорка: «bounded context — это граница, по которой микросервис можно вырезать».
 
 ### TODO
 
  app — application services / use cases. Поподробнее, что такое application services?
+
+
+## Event bus
+
+:open_file_folder: `backend/internal/eventbus/eventbus.go`
+
+TODO

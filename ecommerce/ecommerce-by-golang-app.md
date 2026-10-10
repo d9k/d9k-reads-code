@@ -164,13 +164,41 @@ func (db postgres) FindVariant(ctx context.Context, variantID string) (domain.Pr
 🤖 Qwen Flash: Аналогия верна наполовину — и именно в этом суть
 Сходство (почему вы так решили): границы bounded contexts действительно выглядят как границы микросервисов: свои модели (у cart свой Product, у productcatalog свой), свои таблицы в миграциях с префиксом контекста (`cart_*`, `checkout_*`, `productcatalog_*`), свои интеграционные паттерны (ACL, Published Language, Outbox/Inbox) — это ровно тот же инструментарий, что применяют при проектировании сервисов. Есть даже поговорка: «bounded context — это граница, по которой микросервис можно вырезать».
 
+#### Ссылки на Customer-Supplier и Conformist
+
+Проект выбирает `Conformist` там, где у слоя нет доменных правил (layout), и `Customer-Supplier` там, где есть критичные инварианты (резерв стока, оплата заказа).
+
+Посмотрите на import'ы потребителя: чужой domain в подписях портов = conformist (layout); свои/примитивные типы = customer договорился о форме (checkout).
+
+##### Conformist
+
+:open_file_folder: `backend/layout/bounded_context.go`:
+
+`type catalogService interface`: `FindVariant()` , `List()`, `CreateAttributeType()`
+
+У presentation-слоя нет собственных инвариантов — его работа «взять и отрендерить». Writing ACL стоил бы сотнями строк мапперов ради защиты типа, который всё равно только печатают. `README.md` так и формулирует: «A presentation layer that just renders is a natural conformist».
+
+Интерфейс объявлен приватно (с мал. буквы) в layout, но форма повторяет поставщика 1-в-1. Это и значит «conformist: принимаешь словарь поставщика как есть, без перевода».
+
+##### **Порты `Customer-Supplier` (объявлены потребителем `checkout`):**
+
+- `CartReader` в :open_file_folder: `backend/checkout/bounded_context.go` — в корневом файле контекста (дубль в `CartReader interface` в `backend/checkout/app/checkout.go`) с комментарием: _«let New accept the cart service... without importing cart.app directly»_.)
+	- Таблица методов не совпадает с `ProductService`: каталог умеет десятки операций, `checkout` попросил ровно две.
+	- Поставщик знает о договорённости и её держит: комментарий у `ProductService.Record()`: _«Intended as the StockMovements seam for the checkout context»_. Это и есть _«supplier agrees to honour the contract»_ из статьи [Customer Supplier | ddd-practitioners](https://ddd-practitioners.com/home/glossary/bounded-context/bounded-context-relationship/customer-supplier/) — отдельный метод заведён ради конкретного заказчика.
+- `StockReserver` :open_file_folder: `backend/checkout/bounded_context.go` — «implemented by the product catalogue; checkout reserves stock atomically».
+- `StockMovements` в :open_file_folder: `backend/checkout/bounded_context.go` — audit-log seam, тоже реализуется каталогом.
+
+### Тесты проверяют соблюдение интерфейсов
+
+:open_file_folder: `backend/integration/orderpaid_test.go`: комментарий _«If the `OrderPaid` integration event's shape changes (fields added/renamed), or a subscriber is added/removed/renamed , or the at-least-once delivery contract from the outbox dispatcher is altered, this test breaks and you'll  notice...»_
+
 ### TODO
 
  app — application services / use cases. Поподробнее, что такое application services?
-
 
 ## Event bus
 
 :open_file_folder: `backend/internal/eventbus/eventbus.go`
 
-TODO
+- [ ] TODO как работает?
+

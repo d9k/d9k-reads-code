@@ -2,13 +2,13 @@
 
 ## Architecture from README, 2026.08.30
 
-> :speaking_head_in_silhouette: -> :robot_face::
+> 🗣️️ -> :robot_face::
 > Прочитай
 > - Context map
 > - Relationship types
 > из README и объясни по-русски архитектурные решения, и почему они были сделаны
 
-:robot_face: Kat Coder 2:
+:robot_face: Kat Coder 2, Qwen Coder:
 
 ### Доменные контексты бэкенда
 
@@ -188,17 +188,48 @@ func (db postgres) FindVariant(ctx context.Context, variantID string) (domain.Pr
 - `StockReserver` :open_file_folder: `backend/checkout/bounded_context.go` — «implemented by the product catalogue; checkout reserves stock atomically».
 - `StockMovements` в :open_file_folder: `backend/checkout/bounded_context.go` — audit-log seam, тоже реализуется каталогом.
 
-### Тесты проверяют соблюдение интерфейсов
-
-:open_file_folder: `backend/integration/orderpaid_test.go`: комментарий _«If the `OrderPaid` integration event's shape changes (fields added/renamed), or a subscriber is added/removed/renamed , or the at-least-once delivery contract from the outbox dispatcher is altered, this test breaks and you'll  notice...»_
-
-### TODO
-
- app — application services / use cases. Поподробнее, что такое application services?
-
-## Event bus
 
 :open_file_folder: `backend/internal/eventbus/eventbus.go`
 
-- [ ] TODO как работает?
+### Outbox — паттерн «Транзакционная почтовая тумбочка»
 
+**Проблема, которую он решает:** допустим, checkout хочет «сохранить заказ в БД» **и** «опубликовать событие в шину». Это две разные системы. Если между ними упадёт процесс — получаем либо заказ без уведомления (корзина не очистится, письмо не уйдёт), либо уведомление о заказе, которого нет в БД. Атомарности между двумя системами «из коробки» не бывает.
+
+Решение: вместо внешней отправки писать событие... в ту же самую БД, отдельной таблицей `outbox_event`, в той же транзакции. Эта таблица и есть «outbox» (тумбочка для исходящей почты):
+
+Дальше
+- …каждые `OUTBOX_INTERVAL` (по умолчанию `1s`, берётся из `docker-compose.yaml`
+- …отдельный фоновый **диспетчер** `Dispatcher` из :open_file_folder:`backend/internal/outbox/dispatcher.go`
+- …читает ещё не отправленные строки `Unsent()` в :open_file_folder: `backend/internal/outbox/postgres.go`
+	- Реализация `Unsent()` в `backend/internal/outbox/postgres.go`
+- …публикует их в event bus
+	- :open_file_folder: `backend/internal/outbox/dispatcher.go`
+		- `func dispatchOnce(ctx context.Context)`
+			- `d.bus.PublishWithID(ctx, r.ID, event)`
+			- 🡤 :open_file_folder: `backend/cmd/web/main.go`
+				- `bus := eventbus.New(logger)`
+			- :open_file_folder: `backend/internal/eventbus/eventbus.go`
+				- `func PublishWithID(ctx context.Context, eventID int64, e Event) {`
+- …и помечает `MarkSent()` в :open_file_folder: `backend/internal/outbox/postgres.go`.
+	- `UPDATE outbox_event SET sent_at = now()`
+
+### Тесты проверяют соблюдение интерфейсов
+
+***Interface churn*** - контракт (интерфейс, схема события, API) постоянно меняется: поля переименовываются, добавляются/уезжают, сигнатуры правятся. ***Churn*** (с англ. «отток, ворóт, трение») — в инженерном сленге означает частые, хаотичные изменения того, что должно быть стабильным.
+
+- :open_file_folder: `backend/integration/orderpaid_test.go`: комментарий _«If the `OrderPaid` integration event's shape changes (fields added/renamed), or a subscriber is added/removed/renamed , or the at-least-once delivery contract from the outbox dispatcher is altered, this test breaks and you'll  notice...»_
+
+- :open_file_folder: `backend/checkout/adapter/outbox_test.go`:
+	- `TestExtractIntegrationEvents_JSONShapeMatchesIntegrationOrderPaid()` - JSON round-trip проверка
+		- `//` _«If anyone renames a field on `integration.OrderPaid` without updating the producer, this assertion fails loudly.»_
+		- `is.NoErr(json.Unmarshal(records[0].Payload, &got))`
+
+- В :open_file_folder: `migrations/000035_checkout_events_payload_version.up.sql`добавляетя поле `checkout_events.payload_version`, чтобы при эволюции контракта старые сообщения можно было отличить.
+
+- :open_file_folder: `backend/internal/eventcatalog/catalog.go`: типы событий `KindIntegration`/ `KindDomain`
+
+### TODO
+
+app — application services / use cases. Поподробнее, что такое application services?
+
+## Event bus

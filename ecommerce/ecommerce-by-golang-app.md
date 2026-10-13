@@ -189,9 +189,26 @@ func (db postgres) FindVariant(ctx context.Context, variantID string) (domain.Pr
 - `StockMovements` в :open_file_folder: `backend/checkout/bounded_context.go` — audit-log seam, тоже реализуется каталогом.
 
 
+### Тесты проверяют соблюдение интерфейсов
+
+***Interface churn*** - контракт (интерфейс, схема события, API) постоянно меняется: поля переименовываются, добавляются/уезжают, сигнатуры правятся. ***Churn*** (с англ. «отток, ворóт, трение») — в инженерном сленге означает частые, хаотичные изменения того, что должно быть стабильным.
+
+- :open_file_folder: `backend/integration/orderpaid_test.go`: комментарий _«If the `OrderPaid` integration event's shape changes (fields added/renamed), or a subscriber is added/removed/renamed , or the at-least-once delivery contract from the outbox dispatcher is altered, this test breaks and you'll  notice...»_
+
+- :open_file_folder: `backend/checkout/adapter/outbox_test.go`:
+	- `TestExtractIntegrationEvents_JSONShapeMatchesIntegrationOrderPaid()` - JSON round-trip проверка
+		- `//` _«If anyone renames a field on `integration.OrderPaid` without updating the producer, this assertion fails loudly.»_
+		- `is.NoErr(json.Unmarshal(records[0].Payload, &got))`
+
+- В :open_file_folder: `migrations/000035_checkout_events_payload_version.up.sql`добавляетя поле `checkout_events.payload_version`, чтобы при эволюции контракта старые сообщения можно было отличить.
+
+- :open_file_folder: `backend/internal/eventcatalog/catalog.go`: типы событий `KindIntegration`/ `KindDomain`
+
+### Event bus
+
 :open_file_folder: `backend/internal/eventbus/eventbus.go`
 
-### Outbox — паттерн «Транзакционная почтовая тумбочка»
+#### Outbox — паттерн «Транзакционная почтовая тумбочка»
 
 **Проблема, которую он решает:** допустим, checkout хочет «сохранить заказ в БД» **и** «опубликовать событие в шину». Это две разные системы. Если между ними упадёт процесс — получаем либо заказ без уведомления (корзина не очистится, письмо не уйдёт), либо уведомление о заказе, которого нет в БД. Атомарности между двумя системами «из коробки» не бывает.
 
@@ -213,23 +230,60 @@ func (db postgres) FindVariant(ctx context.Context, variantID string) (domain.Pr
 - …и помечает `MarkSent()` в :open_file_folder: `backend/internal/outbox/postgres.go`.
 	- `UPDATE outbox_event SET sent_at = now()`
 
-### Тесты проверяют соблюдение интерфейсов
-
-***Interface churn*** - контракт (интерфейс, схема события, API) постоянно меняется: поля переименовываются, добавляются/уезжают, сигнатуры правятся. ***Churn*** (с англ. «отток, ворóт, трение») — в инженерном сленге означает частые, хаотичные изменения того, что должно быть стабильным.
-
-- :open_file_folder: `backend/integration/orderpaid_test.go`: комментарий _«If the `OrderPaid` integration event's shape changes (fields added/renamed), or a subscriber is added/removed/renamed , or the at-least-once delivery contract from the outbox dispatcher is altered, this test breaks and you'll  notice...»_
-
-- :open_file_folder: `backend/checkout/adapter/outbox_test.go`:
-	- `TestExtractIntegrationEvents_JSONShapeMatchesIntegrationOrderPaid()` - JSON round-trip проверка
-		- `//` _«If anyone renames a field on `integration.OrderPaid` without updating the producer, this assertion fails loudly.»_
-		- `is.NoErr(json.Unmarshal(records[0].Payload, &got))`
-
-- В :open_file_folder: `migrations/000035_checkout_events_payload_version.up.sql`добавляетя поле `checkout_events.payload_version`, чтобы при эволюции контракта старые сообщения можно было отличить.
-
-- :open_file_folder: `backend/internal/eventcatalog/catalog.go`: типы событий `KindIntegration`/ `KindDomain`
-
 ### TODO
 
 app — application services / use cases. Поподробнее, что такое application services?
 
-## Event bus
+
+## boundedContext, 2026.10.13
+
+🗣️️ `backend/checkout/bounded_context.go`:
+
+```go
+func New(db *sql.DB, cart CartReader, outbox adapter.OutboxAppender, payment app.PaymentProcessor, stock StockReserver, movements StockMovements, taxStrategy domain.TaxStrategy, shippingStrategy domain.ShippingStrategy) (application.BoundedContext, app.CheckoutService, query.Service) {
+	// . . . . .
+	return &boundedContext{}, cmd, queries
+}
+```
+
+— что за `BoundedContext`?
+
+:robot_face: Qwen:
+
+- :open_file_folder: `backend/cart/bounded_context.go`
+	- `New(db *sql.DB, logger logrus.FieldLogger, pc productStorage): (application.BoundedContext, app.CartService) {`
+		- return `&boundedContext{ logger: logger, }, srv`
+
+- :open_file_folder: `backend/cmd/web/main.go`
+	- `app.AddBoundedContext(cartBD)`
+		- :arrow_right_hook: :open_file_folder: `backend/internal/application/appplication.go`
+			- `if m, ok := bc.(MuxRegister); ok { 		m.MuxRegister(app.router)	}`
+
+
+`bc.(MuxRegister)`: _"convert to `m` if `bc` implements `MuxRegister`"_. Т. е. приём «хочешь — реализуй роуты, не хочешь — просто проходим мимо».
+
+
+
+:open_file_folder: `backend/internal/application/appplication.go`:
+
+```go
+type MuxRegister interface {
+	MuxRegister(*mux.Router)
+}
+```
+
+- :link: :open_file_folder: `backend/auth/bounded_context.go`
+	- `func (m boundedContext) MuxRegister(r *mux.Router) {`
+		- `r.HandleFunc("/api/v1/auth/login", m.httpHandler.Login).Methods("POST")`
+
+🗣️️ Почему `type boundedContext` объявлен приватным (с  мал. буквы)?
+
+:robot_face: Qwen: Ключевой момент Go, который часто упускают: неэкспортируемый тип можно вернуть из публичной функции — просто снаружи нельзя написать его имя.
+
+- **Сужение API пакета.** Публичная поверхность `checkout` — фактически одна функция `New` (+ порты `CartReader`/`StockReserver` для wiring). Тип-оболочка — деталь реализации; завтра её поля изменятся или её вообще удалят — и это **не будет breaking change** для потребителей, потому что никто не мог на неё сослаться.
+- Будь типы публичными, пришлось бы изобретать `CheckoutBoundedContext`, `CartBoundedContext` — и это было бы почти бесполезной номенклатурой.
+- Внутри пакета `checkout` префикс избыточен: `checkout.CheckoitBoundedContext` читается как «масло масляное».
+
+Идиома Go: **экспортируй минимум** («expose only what clients need»). Заметьте контраст в том же файле :open_file_folder: `backend/checkout/bounded_context.go`: `CartReader`, `StockReserver` — публичные, они **нужны** `main.go` для правильной сборки, передачи в `New()`.
+
+- Единственное «но» (осознанная жертва): Диспетчер или лог не сможет по имени типа отличить, какой контекст зарегистрировал модуль — но проекту это и не требуется: `main.go` сам знает порядок регистрации (вызовов `app.AddBoundedContext()`), а полиморфизм нужен лишь через `MuxRegister`. Так что приватность здесь ничего не теряет и много даёт.

@@ -2,13 +2,13 @@
 
 ## Architecture from README, 2026.08.30
 
-> 🗣️️ -> :robot_face::
+> 🗣️️ -> 🤖:
 > Прочитай
 > - Context map
 > - Relationship types
 > из README и объясни по-русски архитектурные решения, и почему они были сделаны
 
-:robot_face: Kat Coder 2, Qwen Coder:
+🤖 Kat Coder 2, Qwen Coder:
 
 ## Доменные контексты бэкенда
 
@@ -333,7 +333,7 @@ func New(db *sql.DB, cart CartReader, outbox adapter.OutboxAppender, payment app
 
 — что за `BoundedContext`?
 
-:robot_face: Qwen:
+🤖 Qwen:
 
 - :open_file_folder: `backend/cart/bounded_context.go`
 	- `New(db *sql.DB, logger logrus.FieldLogger, pc productStorage): (application.BoundedContext, app.CartService) {`
@@ -361,7 +361,7 @@ type MuxRegister interface {
 
 🗣️️ Почему `type boundedContext` объявлен приватным (с  мал. буквы)?
 
-:robot_face: Qwen: Ключевой момент Go, который часто упускают: неэкспортируемый тип можно вернуть из публичной функции — просто снаружи нельзя написать его имя.
+🤖 Qwen: Ключевой момент Go, который часто упускают: неэкспортируемый тип можно вернуть из публичной функции — просто снаружи нельзя написать его имя.
 
 - **Сужение API пакета.** Публичная поверхность `checkout` — фактически одна функция `New` (+ порты `CartReader`/`StockReserver` для wiring). Тип-оболочка — деталь реализации; завтра её поля изменятся или её вообще удалят — и это **не будет breaking change** для потребителей, потому что никто не мог на неё сослаться.
 - Будь типы публичными, пришлось бы изобретать `CheckoutBoundedContext`, `CartBoundedContext` — и это было бы почти бесполезной номенклатурой.

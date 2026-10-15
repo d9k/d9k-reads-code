@@ -10,7 +10,7 @@
 
 :robot_face: Kat Coder 2, Qwen Coder:
 
-### Доменные контексты бэкенда
+## Доменные контексты бэкенда
 
 Бэкенд разбит на независимые доменные контексты:
 
@@ -20,24 +20,22 @@
 - auth — пользователи, сессии, роли
 - shippinginfo — сохранённые адреса
 - search — поиск
-- layout — слой презентации (HTMX storefront + admin panel)
+- layout — слой презентации (HTMX storefront + admin panel). Контроллеры, вызывающие app-сервисы.
 
-### Структура каждого доменного контекста бэкенда
+## Структура каждого доменного контекста бэкенда
 
-- domain — сущности, value objects, инварианты
-- app — application services / use cases
+- domain — сущности, value objects, инварианты, бизнес-правила, генерация событий.
+- app — application services / use cases. Границы транзакции.
 - adapter — сохранение данных в базу данных (Postgres + in-memory реализация)
-- `bounded_context.go` - точка для связи с другими доменами
+- `bounded_context.go` - точка для связи с другими доменными контекстами
 
-### Обоснование архитектуры
+## Обоснование архитектуры
 
 Каждый контекст владеет своими данными и имеет чёткую ответственность. Это позволяет разработчикам работать независимо, уменьшает связанность и упрощает поддержку.
 
 Это реализация гексагональной архитектуры (ports & adapters). Доменная логика изолирована от инфраструктуры, что позволяет легко тестировать и заменять реализации.
 
-### Отношения между контекстами
-
-#### ACL
+## Отношения между контекстами: ACL
 
 Anti-Corruption Layer: доменный контекст `cart/` не импортирует типы доменного контекста `productcatalog/` напрямую. Вместо этого есть слой трансформации: адаптер `transformProductCatalog` который преобразует `productcatalog.Variant` в собственную модель `domain.Product`.
 
@@ -164,13 +162,13 @@ func (db postgres) FindVariant(ctx context.Context, variantID string) (domain.Pr
 🤖 Qwen Flash: Аналогия верна наполовину — и именно в этом суть
 Сходство (почему вы так решили): границы bounded contexts действительно выглядят как границы микросервисов: свои модели (у cart свой Product, у productcatalog свой), свои таблицы в миграциях с префиксом контекста (`cart_*`, `checkout_*`, `productcatalog_*`), свои интеграционные паттерны (ACL, Published Language, Outbox/Inbox) — это ровно тот же инструментарий, что применяют при проектировании сервисов. Есть даже поговорка: «bounded context — это граница, по которой микросервис можно вырезать».
 
-#### Ссылки на Customer-Supplier и Conformist
+## Отношения между контекстами: Ссылки на Customer-Supplier и Conformist
 
 Проект выбирает `Conformist` там, где у слоя нет доменных правил (layout), и `Customer-Supplier` там, где есть критичные инварианты (резерв стока, оплата заказа).
 
 Посмотрите на import'ы потребителя: чужой domain в подписях портов = conformist (layout); свои/примитивные типы = customer договорился о форме (checkout).
 
-##### Conformist
+### Conformist
 
 :open_file_folder: `backend/layout/bounded_context.go`:
 
@@ -180,7 +178,7 @@ func (db postgres) FindVariant(ctx context.Context, variantID string) (domain.Pr
 
 Интерфейс объявлен приватно (с мал. буквы) в layout, но форма повторяет поставщика 1-в-1. Это и значит «conformist: принимаешь словарь поставщика как есть, без перевода».
 
-##### **Порты `Customer-Supplier` (объявлены потребителем `checkout`):**
+### **Порты `Customer-Supplier` (объявлены потребителем `checkout`):**
 
 - `CartReader` в :open_file_folder: `backend/checkout/bounded_context.go` — в корневом файле контекста (дубль в `CartReader interface` в `backend/checkout/app/checkout.go`) с комментарием: _«let New accept the cart service... without importing cart.app directly»_.)
 	- Таблица методов не совпадает с `ProductService`: каталог умеет десятки операций, `checkout` попросил ровно две.
@@ -188,8 +186,96 @@ func (db postgres) FindVariant(ctx context.Context, variantID string) (domain.Pr
 - `StockReserver` :open_file_folder: `backend/checkout/bounded_context.go` — «implemented by the product catalogue; checkout reserves stock atomically».
 - `StockMovements` в :open_file_folder: `backend/checkout/bounded_context.go` — audit-log seam, тоже реализуется каталогом.
 
+## Отношения между контекстами: Open Host Service
 
-### Тесты проверяют соблюдение интерфейсов
+Open Host Service — Published Language-пара: контекст-хозяин публикует единый, стабильный, «общий» API (host service), рассчитанный на многих неизвестных потребителей. Ключевое: хозяин не подстраивается под каждого клиента — все клиенты говорят на его языке (словаре), поэтому протокол один, а клиентов может быть сколько угодно.
+
+:open_file_folder: `backend/search/domain/document.go`:
+
+**Язык хозяина — единый value object `Document`:**
+
+```go
+// «The search context is an Open Host Service (OHS): it publishes a single value object — Document — together with a Kind discriminator... The search context itself does not know about products, blog posts, or anything else — it only knows about documents».
+// «Adding a new producer requires no change here: a producer chooses a new Kind value (any non-empty string), translates its records to Documents and calls Indexer.Index. The set of known kinds is intentionally NOT a closed enum at the type level — it is open by design (that is the OHS pattern)».
+// . . . . .
+type Document struct { kind, id, title, body, url; tags, meta, updatedAt }
+```
+
+**Два публичных порта хозяина** в в :open_file_folder: `backend/search/app/service.go`: `Indexer` и `Querier`. В :open_file_folder: `backend/search/app/service.go` один `*Service` удовлетворяет обоим:
+
+```go
+type Indexer interface {
+	Index(ctx context.Context, doc domain.Document) error
+	Remove(ctx context.Context, kind domain.Kind, id string) error
+}
+
+type Querier interface {
+	Search(ctx context.Context, q string, opts QueryOptions) ([]Hit, error)
+}
+
+// «One struct, two roles — production wires the same instance into both seams».
+type Service struct {
+	storage Storage
+}
+
+func (s *Service) Index(ctx context.Context, doc domain.Document) error {
+// . . . . .
+func (s *Service) Remove(ctx context.Context, kind domain.Kind, id string) error {
+// . . . . .
+func (s *Service) Search(ctx context.Context, q string, opts QueryOptions) ([]Hit, error) {
+// . . . . .
+```
+
+Потребление: :open_file_folder: `backend/productcatalog/app/searchindexer.go`:
+
+```go
+type SearchIndexer interface {
+	Index(ctx context.Context, doc searchdomain.Document) error
+	Remove(ctx context.Context, kind searchdomain.Kind, id string) error
+}
+```
+
+:open_file_folder: `backend/productcatalog/bounded_context.go`:
+
+```go
+func New(db *sql.DB, searchIdx app.SearchIndexer) (application.BoundedContext, app.ProductService) {
+	appServ := app.NewProductService(storage).WithSearchIndexer(searchIdx)
+```
+
+:open_file_folder: `backend/productcatalog/app/product.go`: (интерфейс `SearchIndexer` доступен без `import`'а, потому что в том же пакете `app`)
+
+```go
+func (ps ProductService) WithSearchIndexer(idx SearchIndexer) ProductService {
+	ps.searchIdx = idx
+// . . . . .
+
+type ProductService struct {
+	searchIdx SearchIndexer
+```
+
+Отличия от других типов отношений:
+Customer-Supplier - 1 заказчик ↔ 1 поставщик, личные договорённости, заказчик пишет интерфейс, нужный ему. В то время как в **OHS** N producers + M consumers, формирует интерфейс до появления клиента;
+
+> 🗣️️: Можно ли заставить компилятор насильно проверить, что структура должна удовлетворить нескольким интерфейсам?
+
+В Go нет ключевого слова `implements`, но есть приём: объявить **пакетную переменную с blank identifier**, значение которой — компилируемый литерал типа, присваиваемый интерфейсу. Можно было бы сделать так:
+```go
+var _ Indexer = (*Service)(nil)   // "указатель на Service должен быть Indexer'ом"
+var _ Querier = (*Service)(nil)   // "и Querier'ом тоже"
+```
+
+- `nil`-указатель никуда не разыменовывается, рантайм-стоимости нет;
+- `_` — переменная не создаётся для потребителей, мусора в API нет;
+
+Реальный пример из приложения (ищите по `var _`):
+
+:open_file_folder: `backend/payments/adapter/stripe_adapter.go`:
+
+```go
+var _ app.Provider = (*StripeProvider)(nil)
+```
+
+## Тесты проверяют соблюдение интерфейсов
 
 ***Interface churn*** - контракт (интерфейс, схема события, API) постоянно меняется: поля переименовываются, добавляются/уезжают, сигнатуры правятся. ***Churn*** (с англ. «отток, ворóт, трение») — в инженерном сленге означает частые, хаотичные изменения того, что должно быть стабильным.
 
@@ -204,11 +290,15 @@ func (db postgres) FindVariant(ctx context.Context, variantID string) (domain.Pr
 
 - :open_file_folder: `backend/internal/eventcatalog/catalog.go`: типы событий `KindIntegration`/ `KindDomain`
 
-### Event bus
+## Event bus
+
+Checkout реализован как event-sourced aggregate с отдельной CQRS read side.
+
+Почему: Заказы — сложная область с множеством состояний и аудитом. Event sourcing даёт полный audit trail, возможность воспроизведения состояния и лёгкую интеграцию через события.
 
 :open_file_folder: `backend/internal/eventbus/eventbus.go`
 
-#### Outbox — паттерн «Транзакционная почтовая тумбочка»
+### Outbox — паттерн «Транзакционная почтовая тумбочка»
 
 **Проблема, которую он решает:** допустим, checkout хочет «сохранить заказ в БД» **и** «опубликовать событие в шину». Это две разные системы. Если между ними упадёт процесс — получаем либо заказ без уведомления (корзина не очистится, письмо не уйдёт), либо уведомление о заказе, которого нет в БД. Атомарности между двумя системами «из коробки» не бывает.
 
@@ -229,11 +319,6 @@ func (db postgres) FindVariant(ctx context.Context, variantID string) (domain.Pr
 				- `func PublishWithID(ctx context.Context, eventID int64, e Event) {`
 - …и помечает `MarkSent()` в :open_file_folder: `backend/internal/outbox/postgres.go`.
 	- `UPDATE outbox_event SET sent_at = now()`
-
-### TODO
-
-app — application services / use cases. Поподробнее, что такое application services?
-
 
 ## boundedContext, 2026.10.13
 
@@ -261,8 +346,6 @@ func New(db *sql.DB, cart CartReader, outbox adapter.OutboxAppender, payment app
 
 
 `bc.(MuxRegister)`: _"convert to `m` if `bc` implements `MuxRegister`"_. Т. е. приём «хочешь — реализуй роуты, не хочешь — просто проходим мимо».
-
-
 
 :open_file_folder: `backend/internal/application/appplication.go`:
 

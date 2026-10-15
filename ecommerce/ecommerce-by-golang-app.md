@@ -370,3 +370,65 @@ type MuxRegister interface {
 Идиома Go: **экспортируй минимум** («expose only what clients need»). Заметьте контраст в том же файле :open_file_folder: `backend/checkout/bounded_context.go`: `CartReader`, `StockReserver` — публичные, они **нужны** `main.go` для правильной сборки, передачи в `New()`.
 
 - Единственное «но» (осознанная жертва): Диспетчер или лог не сможет по имени типа отличить, какой контекст зарегистрировал модуль — но проекту это и не требуется: `main.go` сам знает порядок регистрации (вызовов `app.AddBoundedContext()`), а полиморфизм нужен лишь через `MuxRegister`. Так что приватность здесь ничего не теряет и много даёт.
+
+## Тесты: БД?
+
+> 🗣️️ Для тестов используется какая-то отдельная база данных?
+
+🤖 Qwen:
+
+:open_file_folder: `backend/Makefile`:
+
+```Makefile
+tests:
+	@go test ./...
+
+integration:
+	@go test -tags=integration ./... -count 1
+```
+
+### Юнит-тесты (go test ./...) — базы вообще нет
+
+Никакого Postgres не поднимается — работают only те тесты, которым хватает in-memory адаптеров и фейков по портам (:open_file_folder: `adapter/inmemory.go`, `nopStockMovements`, fake `PaymentProcessor`). Тестовый файл сам решает, « База есть? Нет — передай in-memory storage».
+
+### Интеграционные тесты (-tags=integration) — реальная Postgres
+
+Все файлы вида :open_file_folder: `backend/cart/setup_integration_test.go` начинаются с `//go:build integration` — без этого тега они **вообще не компилируются**, поэтому обычный `go test ./...` их не трогает. С тегом (`make integration` в :open_file_folder: `backend/Makefile`) они коннектятся к настоящему Postgres через env.
+
+:open_file_folder: `backend/cart/setup_integration_test.go`:
+
+```go
+conn := fmt.Sprintf("… dbname=%s …",
+  // . . . . .
+  getEnv("POSTGRES_DB", "ecommerce"))
+
+db, err := sql.Open("postgres", conn)
+```
+
+**Имя БД по умолчанию — `ecommerce`, то же самое, что у dev-контейнера** в `docker-compose.yaml`. Отдельной схемы `ecommerce_test` или префикса нет.
+
+### В CI — да, фактически отдельная и одноразовая
+
+:open_file_folder: `.github/workflows/go.yml`:
+
+```yml
+// . . . . .
+jobs:
+  integration-tests:
+    services:
+      postgres:
+		  env:
+			  POSTGRES_DB: ecommerce
+	      // . . . . .
+	      steps:
+		    - name: Run migration
+		      run: |
+		        export PATH=${PATH}:`go env GOPATH`/bin
+		        migrate -source file://migrations -database "postgres://postgres:postgres@localhost:5432/ecommerce?sslmode=disable" up
+			// . . . . .
+		    - name: Test
+			   run: cd ./backend && go test -v ./... -tags integration
+```
+
+
+Джоб `integration-tests` в :open_file_folder: `.github/workflows/go.yml` поднимает **свежий service-container** `postgres` (disposable база, живёт только время джоба), прогоняет в нём миграции `migrate ... up` и только потом запускает `go test -tags=integration`. То есть «отдельность» достигается не отдельным именем БД, а **отдельным одноразовым контейнером на прогон.**
